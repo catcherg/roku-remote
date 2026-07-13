@@ -1,0 +1,12 @@
+# Roku Remote — Claude Code Project Memory
+- App name: "Clicker – Remote for Roku". Bundle ID: com.catchergriffin.clicker.
+- iOS 16+, Swift 5.10, SwiftUI, zero third-party dependencies.
+- ALL networking lives in RokuKit (Swift Package). UI code never constructs URLs.
+- ECP base: http://{ip}:8060 — see ROKU_REMOTE_PROJECT_ROADMAP.md §1.1 for endpoints/keys.
+- Discovery: SubnetScanner is primary until multicast entitlement approved; SSDPDiscoverer behind a capability check.
+- Volume/Power keys ONLY shown when device-info reports is-tv=true.
+- Every RokuKit public API needs a unit test. Run: `swift test` in RokuKit/, `xcodebuild test` for app.
+- Timeouts: 2s ECP commands, 1s subnet-scan probes, 4s SSDP window.
+- Never block the main thread; all networking async/await.
+- Brand: NOT named "Roku Remote"; no Roku logos/purple. Disclaimer in Settings.
+- Commit style: conventional commits (feat:, fix:, test:, chore:).

@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  rokukit:
+    name: RokuKit build + test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Swift version
+        run: swift --version
+      - name: Build
+        working-directory: RokuKit
+        run: swift build
+      - name: Test
+        working-directory: RokuKit
+        run: swift test
+
+  app:
+    name: App build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build app target
+        run: |
+          if [ -d "App/Clicker.xcodeproj" ]; then
+            xcodebuild build \
+              -project App/Clicker.xcodeproj \
+              -scheme Clicker \
+              -destination 'generic/platform=iOS Simulator' \
+              CODE_SIGNING_ALLOWED=NO
+          else
+            echo "::notice::App/Clicker.xcodeproj not created yet — skipping app build (see App/XCODE_SETUP.md)."
+          fi
