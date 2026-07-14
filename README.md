@@ -1,6 +1,6 @@
 # Clicker – Remote for Roku
 
-![CI](https://github.com/YOUR_GITHUB_USERNAME/roku-remote/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/catcherg/roku-remote/actions/workflows/ci.yml/badge.svg)
 
 A premium, dark-mode-first iOS remote for Roku TVs and streaming devices. One-time purchase, no ads, no accounts, no backend — all control happens over your local network via Roku's External Control Protocol (ECP).
 
@@ -17,9 +17,6 @@ A premium, dark-mode-first iOS remote for Roku TVs and streaming devices. One-ti
 ```bash
 cd RokuKit && swift test
 ```
-
-> After pushing to GitHub, replace `YOUR_GITHUB_USERNAME` in the badge URL above.
-
 ---
 
 *Not affiliated with or endorsed by Roku, Inc. Roku is a trademark of Roku, Inc.*
