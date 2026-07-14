@@ -1,0 +1,43 @@
+name: Clicker
+options:
+  bundleIdPrefix: com.catchergriffin
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+
+packages:
+  RokuKit:
+    path: ../RokuKit
+
+targets:
+  Clicker:
+    type: application
+    platform: iOS
+    sources:
+      - Clicker
+    dependencies:
+      - package: RokuKit
+    info:
+      path: Support/Info.plist
+      properties:
+        NSLocalNetworkUsageDescription: This app needs local network access to find and control Roku devices on your Wi-Fi.
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.catchergriffin.clicker
+        MARKETING_VERSION: 0.1.0
+        CURRENT_PROJECT_VERSION: 1
+        TARGETED_DEVICE_FAMILY: 1
+        SWIFT_VERSION: "5.10"
+
+schemes:
+  Clicker:
+    build:
+      targets:
+        Clicker: all
+    run:
+      config: Debug
+    archive:
+      config: Release
