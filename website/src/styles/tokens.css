@@ -18,7 +18,7 @@
   /* Text */
   --text-primary:   #F4F4F8;
   --text-secondary: #A0A0B2;
-  --text-muted:     #6B6B7E;
+  --text-muted:     #82829A; /* ≥4.5:1 on all surfaces (was #6B6B7E, failed WCAG AA) */
   --text-on-brand:  #FFFFFF;
 
   /* Semantic */
