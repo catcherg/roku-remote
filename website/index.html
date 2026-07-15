@@ -3,21 +3,111 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Clicker — a premium remote for Roku. Coming soon." />
+    <meta name="description" content="Clicker — the remote Roku deserves. Try free for 7 days, then one price, forever. No ads. No subscriptions. Ever." />
     <meta name="theme-color" content="#0A0A0F" />
     <title>Clicker — Remote for Roku</title>
-    <link rel="stylesheet" href="/src/styles/tokens.css" />
-    <link rel="stylesheet" href="/src/styles/base.css" />
     <script type="module" src="/src/pages/index.ts"></script>
   </head>
   <body>
+    <header class="site-nav">
+      <div class="container">
+        <a href="/" class="nav-logo">Clicker<span class="dot">.</span></a>
+        <div class="nav-links" data-nav-auth></div>
+      </div>
+    </header>
+
     <main>
-      <h1 class="wordmark">Clicker</h1>
-      <p class="tagline">A premium remote for Roku. Coming soon.</p>
+      <!-- Hero -->
+      <section class="hero container">
+        <p class="eyebrow">For Roku</p>
+        <h1>The remote <span class="accent">Roku deserves.</span></h1>
+        <p class="subline">
+          Try free for 7 days. Then one price, forever.
+          No ads. No subscriptions. Ever.
+        </p>
+        <a href="/signup.html" class="btn btn-primary">Join the waitlist</a>
+        <!-- TODO(W2): iPhone device mockup with app remote screen (needs app Phase 3 assets) -->
+      </section>
+
+      <!-- Value props -->
+      <section class="section container" id="why">
+        <h2 class="section-title">Why Clicker</h2>
+        <div class="card-grid">
+          <div class="card">
+            <h3>One price, forever</h3>
+            <p>Pay once and it's yours. No weekly subscription hiding behind a "free" download.</p>
+          </div>
+          <div class="card">
+            <h3>Instant connection</h3>
+            <p>Open the app and it finds your Roku in seconds. No pairing codes, no setup wizard.</p>
+          </div>
+          <div class="card">
+            <h3>Private by design</h3>
+            <p>No accounts in the app. Nothing leaves your Wi-Fi. Your clicks are between you and your TV.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section class="section container" id="how">
+        <h2 class="section-title">How it works</h2>
+        <div class="card-grid steps">
+          <div class="card step">
+            <h3>Open the app</h3>
+            <p>No sign-in, no onboarding maze. Clicker is ready the moment it launches.</p>
+          </div>
+          <div class="card step">
+            <h3>It finds your Roku</h3>
+            <p>Clicker scans your network and connects to your Roku automatically.</p>
+          </div>
+          <div class="card step">
+            <h3>Control everything</h3>
+            <p>Navigate, type, launch channels, and control volume and power on Roku TVs.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="section container faq" id="faq">
+        <h2 class="section-title">Questions, answered</h2>
+        <details>
+          <summary>Does it work with all Rokus?</summary>
+          <p>Clicker works with any Roku device on your Wi-Fi network — streaming sticks, boxes, and Roku TVs. Volume and power controls appear when your device is a Roku TV.</p>
+        </details>
+        <details>
+          <summary>What happens after the 7-day trial?</summary>
+          <p>You pay once to keep using Clicker. That's it — no subscription, and every future update is included.</p>
+        </details>
+        <details>
+          <summary>Is it really one-time?</summary>
+          <p>Really. We think remote apps that charge weekly are the problem we exist to fix.</p>
+        </details>
+        <details>
+          <summary>Does it need an account?</summary>
+          <p>The app: no, never. An account on this site is only used for the waitlist and beta invites.</p>
+        </details>
+      </section>
+
+      <!-- CTA -->
+      <section class="cta-band">
+        <div class="container">
+          <h2>Be first in line</h2>
+          <p>Join the waitlist and get an invite when the beta opens.</p>
+          <a href="/signup.html" class="btn btn-primary">Join the waitlist</a>
+        </div>
+      </section>
     </main>
-    <footer>
-      <p>© <span id="year">2026</span> Clicker. Built independently.</p>
-      <p>Not affiliated with or endorsed by Roku, Inc. Roku is a trademark of Roku, Inc.</p>
+
+    <footer class="site-footer">
+      <div class="container">
+        <nav>
+          <a href="/">Home</a>
+          <a href="/privacy.html">Privacy</a>
+          <a href="/terms.html">Terms</a>
+        </nav>
+        <p>© <span id="year">2026</span> Clicker. Built independently.</p>
+        <p class="disclaimer">Not affiliated with or endorsed by Roku, Inc. Roku is a trademark of Roku, Inc.</p>
+      </div>
     </footer>
   </body>
 </html>

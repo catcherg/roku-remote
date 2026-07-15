@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0A0A0F" />
+    <title>Sign up — Clicker</title>
+    <script type="module" src="/src/pages/signup.ts"></script>
+  </head>
+  <body>
+    <header class="site-nav">
+      <div class="container">
+        <a href="/" class="nav-logo">Clicker<span class="dot">.</span></a>
+        <div class="nav-links" data-nav-auth></div>
+      </div>
+    </header>
+
+    <main>
+      <div class="narrow container">
+        <h1>Join the waitlist</h1>
+        <p style="margin: 8px 0 24px">Create an account to save your spot and get a beta invite.</p>
+
+        <form id="signup-form" novalidate>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="new-password" minlength="10" required />
+            <p class="hint">At least 10 characters.</p>
+          </div>
+          <div class="field">
+            <label for="display_name">Display name <span style="color: var(--text-muted); font-weight: 400">(optional)</span></label>
+            <input id="display_name" name="display_name" type="text" autocomplete="nickname" />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%">Create account</button>
+          <p class="form-footer">Already have an account? <a href="/login.html">Log in</a></p>
+        </form>
+
+        <div id="signup-done" hidden>
+          <div class="card">
+            <h3>Check your email 📬</h3>
+            <p>We sent you a confirmation link. Click it to activate your account and see your waitlist spot.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <nav>
+          <a href="/">Home</a>
+          <a href="/privacy.html">Privacy</a>
+          <a href="/terms.html">Terms</a>
+        </nav>
+        <p>© <span id="year">2026</span> Clicker. Built independently.</p>
+        <p class="disclaimer">Not affiliated with or endorsed by Roku, Inc. Roku is a trademark of Roku, Inc.</p>
+      </div>
+    </footer>
+  </body>
+</html>

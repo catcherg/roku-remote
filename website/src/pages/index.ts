@@ -1,7 +1,7 @@
-// Phase W0 placeholder entry. Proves the TS build pipeline end to end.
-// Real page logic arrives in Phase W1.
+import "../styles/tokens.css";
+import "../styles/base.css";
+import "../styles/components.css";
+import { initNav, initFooter } from "../lib/nav";
 
-const year = document.querySelector<HTMLSpanElement>("#year");
-if (year) {
-  year.textContent = String(new Date().getFullYear());
-}
+void initNav();
+initFooter();
