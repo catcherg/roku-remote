@@ -16,9 +16,21 @@ jobs:
       - name: Build
         working-directory: RokuKit
         run: swift build
-      - name: Test
+      - name: Test (with coverage)
         working-directory: RokuKit
-        run: swift test
+        run: swift test --enable-code-coverage
+      - name: Coverage report (DoD target ≥85% on RokuKit sources)
+        working-directory: RokuKit
+        run: |
+          BIN=$(swift build --show-bin-path)
+          XCTEST_BUNDLE=$(find "$BIN" -maxdepth 1 -name '*.xctest' | head -1)
+          BINARY="$XCTEST_BUNDLE/Contents/MacOS/$(basename "$XCTEST_BUNDLE" .xctest)"
+          xcrun llvm-cov report "$BINARY" \
+            -instr-profile "$BIN/codecov/default.profdata" \
+            -ignore-filename-regex "Tests|\.build" | tee coverage.txt
+          TOTAL=$(grep '^TOTAL' coverage.txt | awk '{print $10}' | tr -d '%')
+          echo "Line coverage: ${TOTAL}%"
+          echo "### RokuKit line coverage: ${TOTAL}% (target ≥85%)" >> "$GITHUB_STEP_SUMMARY"
 
   app:
     name: App build
