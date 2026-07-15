@@ -1,0 +1,31 @@
+:root {
+  /* Brand — cool electric indigo (vs Roku's warm #662D91) */
+  --brand-700: #4338CA;   /* pressed / deep accents */
+  --brand-600: #4F46E5;   /* PRIMARY: buttons, links, focus rings */
+  --brand-500: #6366F1;   /* hover, highlights */
+  --brand-400: #818CF8;   /* subtle accents, icon tints */
+  --brand-glow: #A5B4FC;  /* glows, gradient tail — use sparingly */
+
+  /* Hero gradient (the one place we get flashy) */
+  --gradient-hero: linear-gradient(135deg, #4F46E5 0%, #7C6CF6 55%, #A5B4FC 100%);
+
+  /* Surfaces — dark-first, matches the app */
+  --bg-base:   #0A0A0F;   /* page background (near-black, blue-tinted) */
+  --bg-raised: #12121A;   /* cards, nav */
+  --bg-overlay:#1A1A26;   /* modals, inputs */
+  --border:    #26263A;   /* hairlines */
+
+  /* Text */
+  --text-primary:   #F4F4F8;
+  --text-secondary: #A0A0B2;
+  --text-muted:     #6B6B7E;
+  --text-on-brand:  #FFFFFF;
+
+  /* Semantic */
+  --success: #34D399;
+  --error:   #F87171;
+  --warning: #FBBF24;
+
+  --radius-sm: 8px; --radius-md: 14px; --radius-lg: 24px; --radius-pill: 999px;
+  --space-unit: 8px; /* all spacing = multiples of 8 */
+}
