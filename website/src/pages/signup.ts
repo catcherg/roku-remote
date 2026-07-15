@@ -2,6 +2,7 @@ import "../styles/tokens.css";
 import "../styles/base.css";
 import "../styles/components.css";
 import { signUp, validateCredentials, getSession } from "../lib/auth";
+import { captureRef } from "../lib/waitlist";
 import { setPending, showMessage, clearMessage } from "../lib/forms";
 import { initNav, initFooter } from "../lib/nav";
 
@@ -28,7 +29,7 @@ form.addEventListener("submit", (e) => {
     if (invalid) return showMessage(form, invalid, "error");
 
     setPending(form, true);
-    const { error } = await signUp(email, password, displayName || undefined);
+    const { error } = await signUp(email, password, displayName || undefined, captureRef());
     setPending(form, false);
 
     if (error) return showMessage(form, error, "error");

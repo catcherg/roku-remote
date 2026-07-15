@@ -13,6 +13,8 @@ export interface Profile {
   waitlist_position: number;
   beta_status: "waitlist" | "invited" | "tester";
   testflight_url: string | null;
+  referral_code: string;
+  referred_by: string | null;
 }
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);

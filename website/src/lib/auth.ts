@@ -21,12 +21,16 @@ export async function signUp(
   email: string,
   password: string,
   displayName?: string,
+  ref?: string | null,
 ): Promise<{ error?: string }> {
+  const data: Record<string, string> = {};
+  if (displayName) data.display_name = displayName;
+  if (ref) data.ref = ref;
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: displayName ? { display_name: displayName } : undefined,
+      data: Object.keys(data).length ? data : undefined,
       emailRedirectTo: `${location.origin}/account.html`,
     },
   });

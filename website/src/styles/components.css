@@ -5,9 +5,14 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background: color-mix(in srgb, var(--bg-raised) 88%, transparent);
+  background: transparent;
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid transparent;
+}
+
+.site-nav.is-scrolled {
+  background: color-mix(in srgb, var(--bg-raised) 88%, transparent);
+  border-bottom-color: var(--border);
 }
 
 .site-nav .container {
@@ -183,6 +188,62 @@
   justify-content: center;
 }
 
+/* ---------- One-field waitlist capture ---------- */
+.waitlist-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--space-unit) * 1.5);
+  max-width: 460px;
+}
+
+.waitlist-form--center { margin-inline: auto; justify-content: center; }
+
+@media (max-width: 879px) {
+  .hero-copy .waitlist-form { margin-inline: auto; justify-content: center; }
+}
+
+.waitlist-form input[type="email"] {
+  flex: 1 1 220px;
+  background: var(--bg-overlay);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
+  font: inherit;
+  padding: 12px 20px;
+  transition: border-color 150ms ease;
+}
+
+.waitlist-form input[type="email"]:focus {
+  outline: none;
+  border-color: var(--brand-500);
+}
+
+.waitlist-form .btn { flex-shrink: 0; }
+
+.waitlist-error {
+  flex-basis: 100%;
+  color: var(--error);
+  font-size: 14px;
+}
+
+.waitlist-success {
+  display: grid;
+  gap: 4px;
+  background: color-mix(in srgb, var(--success) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--success) 35%, transparent);
+  border-radius: var(--radius-md);
+  padding: calc(var(--space-unit) * 2) calc(var(--space-unit) * 3);
+}
+
+.waitlist-success strong { color: var(--success); }
+.waitlist-success span { color: var(--text-secondary); font-size: 14px; }
+
+.micro {
+  margin-top: calc(var(--space-unit) * 1.5);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
 /* Phone mockup */
 .hero-device {
   display: flex;
@@ -253,13 +314,47 @@
   margin: calc(var(--space-unit) * 3) auto calc(var(--space-unit) * 5);
 }
 
-/* ---------- How-it-works ---------- */
-.how-card { text-align: left; }
+/* ---------- How-it-works (alternating rows) ---------- */
+.how-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(var(--space-unit) * 3);
+  align-items: center;
+  padding: calc(var(--space-unit) * 4) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.how-row:last-child { border-bottom: none; }
+
+@media (min-width: 760px) {
+  .how-row { grid-template-columns: 1fr 1.6fr; gap: calc(var(--space-unit) * 6); }
+  .how-row:nth-of-type(even) .how-visual { order: 2; }
+}
+
+.how-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: calc(var(--space-unit) * 6);
+}
+
+.how-step {
+  position: absolute;
+  top: calc(var(--space-unit) * 2);
+  left: calc(var(--space-unit) * 3);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
 
 .step-icon {
-  width: 48px;
-  height: 48px;
-  margin-bottom: calc(var(--space-unit) * 2);
+  width: 72px;
+  height: 72px;
 }
 
 /* ---------- Comparison strip ---------- */
@@ -359,6 +454,46 @@
 .badge[data-status="waitlist"] { color: var(--warning); border-color: color-mix(in srgb, var(--warning) 40%, transparent); }
 .badge[data-status="invited"]  { color: var(--brand-glow); border-color: var(--brand-500); }
 .badge[data-status="tester"]   { color: var(--success); border-color: color-mix(in srgb, var(--success) 40%, transparent); }
+
+/* ---------- Referral card ---------- */
+.referral-card h3 { margin-bottom: var(--space-unit); }
+
+.referral-row {
+  display: flex;
+  gap: var(--space-unit);
+  align-items: center;
+  margin-top: calc(var(--space-unit) * 2);
+}
+
+.referral-link {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: var(--bg-overlay);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--brand-glow);
+}
+
+.share-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-unit);
+  margin-top: calc(var(--space-unit) * 2);
+}
+
+.referral-count {
+  margin-top: calc(var(--space-unit) * 2);
+  font-size: 14px;
+  color: var(--success);
+}
+
+.position-line { font-size: 18px; }
+.position-number { font-size: 28px; color: var(--brand-glow); font-weight: 700; }
 
 /* ---------- Footer ---------- */
 .site-footer {

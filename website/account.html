@@ -19,14 +19,35 @@
     <main>
       <div class="narrow container">
         <h1 id="greeting">Loading…</h1>
+
         <div class="card" style="margin-top: 24px">
           <span class="badge" id="beta-badge">…</span>
-          <p id="waitlist-position" style="margin-top: 12px">Fetching your spot…</p>
+          <p id="waitlist-position" class="position-line" style="margin-top: 12px">Fetching your spot…</p>
           <a id="testflight-link" class="btn btn-primary" style="margin-top: 16px" hidden
              target="_blank" rel="noopener">Open TestFlight invite</a>
         </div>
+
+        <div class="card referral-card" style="margin-top: 16px">
+          <h3>Move up the list</h3>
+          <p style="font-size: 14px">
+            Invites go out in waves — and people who bring friends get pulled into
+            earlier waves. Share your personal link:
+          </p>
+          <div class="referral-row">
+            <code id="referral-link" class="referral-link">…</code>
+            <button type="button" id="copy-referral" class="btn btn-secondary btn-sm">Copy</button>
+          </div>
+          <div class="share-row" id="share-row">
+            <a class="btn btn-secondary btn-sm" id="share-x" target="_blank" rel="noopener">Share on X</a>
+            <a class="btn btn-secondary btn-sm" id="share-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+            <a class="btn btn-secondary btn-sm" id="share-reddit" target="_blank" rel="noopener">Reddit</a>
+          </div>
+          <p id="referral-count" class="referral-count" hidden></p>
+        </div>
+
         <p style="margin-top: 16px; font-size: 14px; color: var(--text-muted)">
-          Invites go out in waves during beta. We'll email you when it's your turn.
+          We onboard in small batches to keep the beta experience premium. You'll get
+          an email the moment it's your turn.
         </p>
         <button type="button" id="logout-btn" class="btn btn-secondary btn-sm" style="margin-top: 24px">
           Log out

@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Clicker — the remote Roku deserves. Try free for 7 days, then one price, forever. No ads. No subscriptions. Ever." />
+    <meta name="description" content="Clicker — the remote Roku deserves. Reserve your spot in the early-access beta. One price forever, no ads, no subscriptions." />
     <meta name="theme-color" content="#0A0A0F" />
     <meta property="og:title" content="Clicker — Remote for Roku" />
-    <meta property="og:description" content="The remote Roku deserves. One price, forever. No ads. No subscriptions." />
+    <meta property="og:description" content="The remote Roku deserves. Reserve your spot in the early-access beta." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://getclicker.me/" />
     <title>Clicker — Remote for Roku</title>
@@ -21,40 +21,39 @@
     </header>
 
     <main>
-      <!-- Hero -->
+      <!-- Hero: value prop + one-field opt-in above the fold -->
       <section class="hero">
         <div class="container hero-grid">
           <div class="hero-copy">
-            <p class="eyebrow">Remote for Roku</p>
-            <h1>Meet <span class="accent">Clicker</span>.<br />The remote Roku deserves.</h1>
-            <p class="subline">
-              Try free for 7 days. Then one price, forever.
-              No ads. No subscriptions. Ever.
+            <p class="eyebrow hero-enter" style="--i: 0">Early-access beta · invites in waves</p>
+            <h1 class="hero-enter" style="--i: 1">Meet <span class="accent">Clicker</span>.<br />The remote Roku deserves.</h1>
+            <p class="subline hero-enter" style="--i: 2">
+              One price, forever. No ads. No subscriptions.
+              Now onboarding beta testers in small batches.
             </p>
-            <div class="hero-actions">
-              <a href="/signup.html" class="btn btn-primary">Join the waitlist</a>
-              <a href="#how" class="btn btn-secondary">See how it works</a>
-            </div>
+            <form class="waitlist-form hero-enter" style="--i: 3" data-waitlist novalidate>
+              <input type="email" name="email" autocomplete="email" placeholder="you@email.com" aria-label="Email address" required />
+              <button type="submit" class="btn btn-primary">Reserve my spot</button>
+            </form>
+            <p class="micro hero-enter" style="--i: 4">Free to join · No password needed · No spam, ever</p>
           </div>
 
           <!-- Device mockup — placeholder remote UI.
-               TODO(W2/app Phase 3): replace inner screen with real app screenshot export. -->
-          <div class="hero-device" aria-hidden="true">
+               TODO(app Phase 3): replace inner screen with real app screenshot export. -->
+          <div class="hero-device hero-enter" style="--i: 2" aria-hidden="true">
             <div class="phone">
               <div class="phone-notch"></div>
               <svg class="phone-screen" viewBox="0 0 260 520" xmlns="http://www.w3.org/2000/svg" role="img">
                 <rect width="260" height="520" fill="#0A0A0F" />
                 <text x="130" y="44" text-anchor="middle" fill="#A0A0B2" font-family="inherit" font-size="13">Living Room</text>
-                <text x="130" y="64" text-anchor="middle" fill="#6B6B7E" font-family="inherit" font-size="10">Connected · Roku TV</text>
-                <!-- D-pad -->
+                <text x="130" y="64" text-anchor="middle" fill="#82829A" font-family="inherit" font-size="10">Connected · Roku TV</text>
                 <circle cx="130" cy="180" r="78" fill="#12121A" stroke="#26263A" />
-                <circle cx="130" cy="180" r="30" fill="#4F46E5" />
+                <circle class="dpad-ok" cx="130" cy="180" r="30" fill="#4F46E5" />
                 <text x="130" y="185" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="600">OK</text>
                 <path d="M130 122 l-9 12 h18 z" fill="#818CF8" />
                 <path d="M130 238 l-9 -12 h18 z" fill="#818CF8" />
                 <path d="M72 180 l12 -9 v18 z" fill="#818CF8" />
                 <path d="M188 180 l-12 -9 v18 z" fill="#818CF8" />
-                <!-- Button rows -->
                 <g fill="#12121A" stroke="#26263A">
                   <rect x="28" y="292" width="60" height="44" rx="14" />
                   <rect x="100" y="292" width="60" height="44" rx="14" />
@@ -71,7 +70,6 @@
                   <text x="130" y="374">Play</text>
                   <text x="202" y="374">Fwd</text>
                 </g>
-                <!-- Volume pill -->
                 <rect x="28" y="416" width="204" height="44" rx="22" fill="#12121A" stroke="#26263A" />
                 <text x="62" y="443" text-anchor="middle" fill="#818CF8" font-size="14">−</text>
                 <text x="130" y="442" text-anchor="middle" fill="#A0A0B2" font-size="10">Volume</text>
@@ -84,62 +82,78 @@
 
       <!-- Value props -->
       <section class="section container" id="why">
-        <h2 class="section-title">Why <span class="brand-word">Clicker</span></h2>
+        <h2 class="section-title" data-reveal="0">Why <span class="brand-word">Clicker</span></h2>
         <div class="card-grid">
-          <div class="card">
+          <div class="card lift" data-reveal="0">
             <h3>One price, forever</h3>
             <p>Pay once and it's yours. No weekly subscription hiding behind a "free" download.</p>
           </div>
-          <div class="card">
+          <div class="card lift" data-reveal="1">
             <h3>Instant connection</h3>
             <p>Open the app and it finds your Roku in seconds. No pairing codes, no setup wizard.</p>
           </div>
-          <div class="card">
+          <div class="card lift" data-reveal="2">
             <h3>Private by design</h3>
             <p>No accounts in the app. Nothing leaves your Wi-Fi. Your clicks are between you and your TV.</p>
           </div>
         </div>
       </section>
 
-      <!-- How it works -->
+      <!-- How it works — alternating rows -->
       <section class="section container" id="how">
-        <h2 class="section-title">How it works</h2>
-        <div class="card-grid">
-          <div class="card how-card">
+        <h2 class="section-title" data-reveal="0">How it works</h2>
+
+        <div class="how-row" data-reveal="0">
+          <div class="how-visual">
             <svg class="step-icon" viewBox="0 0 48 48" fill="none" stroke="var(--brand-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="14" y="4" width="20" height="40" rx="5" />
               <line x1="21" y1="39" x2="27" y2="39" />
               <circle cx="24" cy="20" r="6" />
             </svg>
-            <h3>1 · Open Clicker</h3>
-            <p>No sign-in, no onboarding maze. Clicker is ready the moment it launches.</p>
+            <span class="how-step">01</span>
           </div>
-          <div class="card how-card">
+          <div class="how-text">
+            <h3>Open Clicker</h3>
+            <p>No sign-in, no onboarding maze. Clicker is ready the moment it launches — faster than finding the remote in the couch cushions.</p>
+          </div>
+        </div>
+
+        <div class="how-row" data-reveal="0">
+          <div class="how-visual">
             <svg class="step-icon" viewBox="0 0 48 48" fill="none" stroke="var(--brand-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="24" cy="34" r="3" />
               <path d="M14 26 a14 14 0 0 1 20 0" />
               <path d="M8 19 a23 23 0 0 1 32 0" />
             </svg>
-            <h3>2 · It finds your Roku</h3>
-            <p>Clicker scans your network and connects to your Roku automatically.</p>
+            <span class="how-step">02</span>
           </div>
-          <div class="card how-card">
+          <div class="how-text">
+            <h3>It finds your Roku</h3>
+            <p>Clicker scans your network and connects automatically. Multiple Rokus? Switch between them with one tap.</p>
+          </div>
+        </div>
+
+        <div class="how-row" data-reveal="0">
+          <div class="how-visual">
             <svg class="step-icon" viewBox="0 0 48 48" fill="none" stroke="var(--brand-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="4" y="10" width="40" height="26" rx="4" />
               <line x1="16" y1="42" x2="32" y2="42" />
               <line x1="24" y1="36" x2="24" y2="42" />
               <polygon points="20,18 30,23 20,28" fill="var(--brand-400)" stroke="none" />
             </svg>
-            <h3>3 · Control everything</h3>
-            <p>Navigate, type, launch channels, and control volume and power on Roku TVs.</p>
+            <span class="how-step">03</span>
+          </div>
+          <div class="how-text">
+            <h3>Control everything</h3>
+            <p>Navigate, type with your keyboard, launch channels, and control volume and power on Roku TVs.</p>
           </div>
         </div>
       </section>
 
       <!-- Comparison strip -->
       <section class="section container" id="compare">
-        <h2 class="section-title"><span class="brand-word">Clicker</span> vs. the usual remote apps</h2>
-        <div class="compare-wrap">
+        <h2 class="section-title" data-reveal="0"><span class="brand-word">Clicker</span> vs. the usual remote apps</h2>
+        <div class="compare-wrap" data-reveal="1">
           <table class="compare">
             <thead>
               <tr>
@@ -172,36 +186,39 @@
             </tbody>
           </table>
         </div>
-        <p class="compare-note">Based on common patterns across popular third-party remote apps. No specific product implied.</p>
+        <p class="compare-note" data-reveal="2">Based on common patterns across popular third-party remote apps. No specific product implied.</p>
       </section>
 
       <!-- FAQ -->
       <section class="section container faq" id="faq">
-        <h2 class="section-title">Questions, answered</h2>
-        <details>
+        <h2 class="section-title" data-reveal="0">Questions, answered</h2>
+        <details data-reveal="0">
           <summary>Does it work with all Rokus?</summary>
           <p>Clicker works with any Roku device on your Wi-Fi network — streaming sticks, boxes, and Roku TVs. Volume and power controls appear when your device is a Roku TV.</p>
         </details>
-        <details>
-          <summary>What happens after the 7-day trial?</summary>
-          <p>You pay once to keep using Clicker. That's it — no subscription, and every future update is included.</p>
+        <details data-reveal="1">
+          <summary>How does the beta work?</summary>
+          <p>We invite testers from the waitlist in small batches to keep the experience premium and the feedback loop tight. Reserve a spot, and you'll get an email when it's your turn.</p>
         </details>
-        <details>
+        <details data-reveal="2">
           <summary>Is it really one-time?</summary>
-          <p>Really. We think remote apps that charge weekly are the problem Clicker exists to fix.</p>
+          <p>Really. After a 7-day free trial you pay once, and every future update is included. Remote apps that charge weekly are the problem Clicker exists to fix.</p>
         </details>
-        <details>
+        <details data-reveal="3">
           <summary>Does it need an account?</summary>
-          <p>The app: no, never. An account on this site is only used for the waitlist and beta invites.</p>
+          <p>The app: no, never. Your email here is only used for the waitlist and beta invites.</p>
         </details>
       </section>
 
       <!-- CTA -->
       <section class="cta-band">
-        <div class="container">
-          <h2>Be first to get <span class="brand-word">Clicker</span></h2>
-          <p>Join the waitlist and get an invite when the beta opens.</p>
-          <a href="/signup.html" class="btn btn-primary">Join the waitlist</a>
+        <div class="container" data-reveal="0">
+          <h2>The beta is filling up in waves</h2>
+          <p>Reserve your spot now — earlier spots get earlier invites.</p>
+          <form class="waitlist-form waitlist-form--center" data-waitlist novalidate>
+            <input type="email" name="email" autocomplete="email" placeholder="you@email.com" aria-label="Email address" required />
+            <button type="submit" class="btn btn-primary">Reserve my spot</button>
+          </form>
         </div>
       </section>
     </main>
