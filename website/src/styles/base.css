@@ -77,6 +77,12 @@ main { flex: 1; width: 100%; }
 .prose p, .prose li { margin-bottom: calc(var(--space-unit) * 2); color: var(--text-secondary); }
 .prose ul { padding-left: calc(var(--space-unit) * 3); }
 
+/* The hidden attribute must always win, even over component display rules
+   (e.g. .btn { display:inline-flex } would otherwise reveal a hidden button). */
+[hidden] {
+  display: none !important;
+}
+
 :focus-visible {
   outline: 2px solid var(--brand-500);
   outline-offset: 2px;
