@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Clicker — the remote Roku deserves. Try free for 7 days, then one price, forever. No ads. No subscriptions. Ever." />
     <meta name="theme-color" content="#0A0A0F" />
+    <meta property="og:title" content="Clicker — Remote for Roku" />
+    <meta property="og:description" content="The remote Roku deserves. One price, forever. No ads. No subscriptions." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://getclicker.me/" />
     <title>Clicker — Remote for Roku</title>
     <script type="module" src="/src/pages/index.ts"></script>
   </head>
@@ -18,20 +22,69 @@
 
     <main>
       <!-- Hero -->
-      <section class="hero container">
-        <p class="eyebrow">For Roku</p>
-        <h1>The remote <span class="accent">Roku deserves.</span></h1>
-        <p class="subline">
-          Try free for 7 days. Then one price, forever.
-          No ads. No subscriptions. Ever.
-        </p>
-        <a href="/signup.html" class="btn btn-primary">Join the waitlist</a>
-        <!-- TODO(W2): iPhone device mockup with app remote screen (needs app Phase 3 assets) -->
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Remote for Roku</p>
+            <h1>Meet <span class="accent">Clicker</span>.<br />The remote Roku deserves.</h1>
+            <p class="subline">
+              Try free for 7 days. Then one price, forever.
+              No ads. No subscriptions. Ever.
+            </p>
+            <div class="hero-actions">
+              <a href="/signup.html" class="btn btn-primary">Join the waitlist</a>
+              <a href="#how" class="btn btn-secondary">See how it works</a>
+            </div>
+          </div>
+
+          <!-- Device mockup — placeholder remote UI.
+               TODO(W2/app Phase 3): replace inner screen with real app screenshot export. -->
+          <div class="hero-device" aria-hidden="true">
+            <div class="phone">
+              <div class="phone-notch"></div>
+              <svg class="phone-screen" viewBox="0 0 260 520" xmlns="http://www.w3.org/2000/svg" role="img">
+                <rect width="260" height="520" fill="#0A0A0F" />
+                <text x="130" y="44" text-anchor="middle" fill="#A0A0B2" font-family="inherit" font-size="13">Living Room</text>
+                <text x="130" y="64" text-anchor="middle" fill="#6B6B7E" font-family="inherit" font-size="10">Connected · Roku TV</text>
+                <!-- D-pad -->
+                <circle cx="130" cy="180" r="78" fill="#12121A" stroke="#26263A" />
+                <circle cx="130" cy="180" r="30" fill="#4F46E5" />
+                <text x="130" y="185" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="600">OK</text>
+                <path d="M130 122 l-9 12 h18 z" fill="#818CF8" />
+                <path d="M130 238 l-9 -12 h18 z" fill="#818CF8" />
+                <path d="M72 180 l12 -9 v18 z" fill="#818CF8" />
+                <path d="M188 180 l-12 -9 v18 z" fill="#818CF8" />
+                <!-- Button rows -->
+                <g fill="#12121A" stroke="#26263A">
+                  <rect x="28" y="292" width="60" height="44" rx="14" />
+                  <rect x="100" y="292" width="60" height="44" rx="14" />
+                  <rect x="172" y="292" width="60" height="44" rx="14" />
+                  <rect x="28" y="348" width="60" height="44" rx="14" />
+                  <rect x="100" y="348" width="60" height="44" rx="14" />
+                  <rect x="172" y="348" width="60" height="44" rx="14" />
+                </g>
+                <g fill="#A0A0B2" font-size="10" text-anchor="middle">
+                  <text x="58" y="318">Back</text>
+                  <text x="130" y="318">Home</text>
+                  <text x="202" y="318">Mute</text>
+                  <text x="58" y="374">Rew</text>
+                  <text x="130" y="374">Play</text>
+                  <text x="202" y="374">Fwd</text>
+                </g>
+                <!-- Volume pill -->
+                <rect x="28" y="416" width="204" height="44" rx="22" fill="#12121A" stroke="#26263A" />
+                <text x="62" y="443" text-anchor="middle" fill="#818CF8" font-size="14">−</text>
+                <text x="130" y="442" text-anchor="middle" fill="#A0A0B2" font-size="10">Volume</text>
+                <text x="198" y="443" text-anchor="middle" fill="#818CF8" font-size="14">+</text>
+              </svg>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- Value props -->
       <section class="section container" id="why">
-        <h2 class="section-title">Why Clicker</h2>
+        <h2 class="section-title">Why <span class="brand-word">Clicker</span></h2>
         <div class="card-grid">
           <div class="card">
             <h3>One price, forever</h3>
@@ -51,20 +104,75 @@
       <!-- How it works -->
       <section class="section container" id="how">
         <h2 class="section-title">How it works</h2>
-        <div class="card-grid steps">
-          <div class="card step">
-            <h3>Open the app</h3>
+        <div class="card-grid">
+          <div class="card how-card">
+            <svg class="step-icon" viewBox="0 0 48 48" fill="none" stroke="var(--brand-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="14" y="4" width="20" height="40" rx="5" />
+              <line x1="21" y1="39" x2="27" y2="39" />
+              <circle cx="24" cy="20" r="6" />
+            </svg>
+            <h3>1 · Open Clicker</h3>
             <p>No sign-in, no onboarding maze. Clicker is ready the moment it launches.</p>
           </div>
-          <div class="card step">
-            <h3>It finds your Roku</h3>
+          <div class="card how-card">
+            <svg class="step-icon" viewBox="0 0 48 48" fill="none" stroke="var(--brand-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="24" cy="34" r="3" />
+              <path d="M14 26 a14 14 0 0 1 20 0" />
+              <path d="M8 19 a23 23 0 0 1 32 0" />
+            </svg>
+            <h3>2 · It finds your Roku</h3>
             <p>Clicker scans your network and connects to your Roku automatically.</p>
           </div>
-          <div class="card step">
-            <h3>Control everything</h3>
+          <div class="card how-card">
+            <svg class="step-icon" viewBox="0 0 48 48" fill="none" stroke="var(--brand-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="10" width="40" height="26" rx="4" />
+              <line x1="16" y1="42" x2="32" y2="42" />
+              <line x1="24" y1="36" x2="24" y2="42" />
+              <polygon points="20,18 30,23 20,28" fill="var(--brand-400)" stroke="none" />
+            </svg>
+            <h3>3 · Control everything</h3>
             <p>Navigate, type, launch channels, and control volume and power on Roku TVs.</p>
           </div>
         </div>
+      </section>
+
+      <!-- Comparison strip -->
+      <section class="section container" id="compare">
+        <h2 class="section-title"><span class="brand-word">Clicker</span> vs. the usual remote apps</h2>
+        <div class="compare-wrap">
+          <table class="compare">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col" class="compare-us">Clicker</th>
+                <th scope="col">Typical remote apps</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Price</th>
+                <td class="compare-us">One-time, yours forever</td>
+                <td>Weekly subscription</td>
+              </tr>
+              <tr>
+                <th scope="row">Ads</th>
+                <td class="compare-us">Never</td>
+                <td>Banner + video ads</td>
+              </tr>
+              <tr>
+                <th scope="row">Trackers &amp; analytics</th>
+                <td class="compare-us">None</td>
+                <td>Usually several</td>
+              </tr>
+              <tr>
+                <th scope="row">Account required</th>
+                <td class="compare-us">No</td>
+                <td>Often</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="compare-note">Based on common patterns across popular third-party remote apps. No specific product implied.</p>
       </section>
 
       <!-- FAQ -->
@@ -80,7 +188,7 @@
         </details>
         <details>
           <summary>Is it really one-time?</summary>
-          <p>Really. We think remote apps that charge weekly are the problem we exist to fix.</p>
+          <p>Really. We think remote apps that charge weekly are the problem Clicker exists to fix.</p>
         </details>
         <details>
           <summary>Does it need an account?</summary>
@@ -91,7 +199,7 @@
       <!-- CTA -->
       <section class="cta-band">
         <div class="container">
-          <h2>Be first in line</h2>
+          <h2>Be first to get <span class="brand-word">Clicker</span></h2>
           <p>Join the waitlist and get an invite when the beta opens.</p>
           <a href="/signup.html" class="btn btn-primary">Join the waitlist</a>
         </div>
