@@ -21,16 +21,20 @@ targets:
       path: Support/Info.plist
       properties:
         NSLocalNetworkUsageDescription: This app needs local network access to find and control Roku devices on your Wi-Fi.
-        UILaunchScreen: {}
+        UILaunchScreen:
+          UIColorName: LaunchBackground
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
+        ITSAppUsesNonExemptEncryption: false
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.catchergriffin.clicker
-        MARKETING_VERSION: 0.1.0
+        MARKETING_VERSION: 0.3.0
         CURRENT_PROJECT_VERSION: 1
         TARGETED_DEVICE_FAMILY: 1
         SWIFT_VERSION: "5.10"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
 
 schemes:
   Clicker:

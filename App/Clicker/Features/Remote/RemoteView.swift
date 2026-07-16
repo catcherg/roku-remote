@@ -1,8 +1,9 @@
 import SwiftUI
 import RokuKit
 
-/// Functional remote layout (Phase 2 task 5) — complete, not pretty.
-/// Volume/power cluster renders ONLY when the device is a TV (CLAUDE.md rule).
+/// Premium remote (Phase 3 task 2). Grouped clusters, primary controls in the
+/// thumb zone (bottom 60%), press animations + haptics on everything.
+/// Volume/power render ONLY when the device is a TV (CLAUDE.md rule).
 struct RemoteView: View {
     @EnvironmentObject private var app: AppState
     @State private var showKeyboard = false
@@ -12,34 +13,57 @@ struct RemoteView: View {
     private var isTV: Bool { app.device?.isTV ?? false }
 
     var body: some View {
-        VStack(spacing: 20) {
-            topRow
-            dPad
-            secondaryRow
-            transportRow
-            if isTV {
-                volumeRow
+        GeometryReader { proxy in
+            VStack(spacing: 0) {
+                topCluster
+                    .padding(.top, 8)
+
+                Spacer(minLength: 12)
+
+                // Primary controls live in the bottom ~60% for thumb reach.
+                DPadView(size: min(proxy.size.width - 96, 280))
+
+                Spacer(minLength: 16)
+
+                mediaCluster
+
+                if isTV {
+                    volumeCluster
+                        .padding(.top, 14)
+                }
+
+                quickActions
+                    .padding(.top, 18)
+                    .padding(.bottom, 10)
             }
-            Spacer(minLength: 0)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal)
         }
-        .padding()
-        .navigationTitle(app.device?.name ?? "Remote")
+        .background(Theme.background.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
+                    Haptics.light()
                     app.disconnect()
                 } label: {
-                    Label("Devices", systemImage: "chevron.backward")
-                        .labelStyle(.titleAndIcon)
+                    Image(systemName: "chevron.backward")
                 }
+                .accessibilityLabel("Back to devices")
             }
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button { showKeyboard = true } label: {
-                    Image(systemName: "keyboard")
-                }
-                Button { showChannels = true } label: {
-                    Image(systemName: "square.grid.3x3")
+            ToolbarItem(placement: .principal) {
+                StatusPill()
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                if isTV {
+                    Button {
+                        Haptics.rigid()
+                        app.send(.power)
+                    } label: {
+                        Image(systemName: "power")
+                            .foregroundStyle(.red)
+                    }
+                    .accessibilityLabel("Power")
                 }
             }
         }
@@ -50,8 +74,10 @@ struct RemoteView: View {
                     .padding(.vertical, 6)
                     .frame(maxWidth: .infinity)
                     .background(.yellow.opacity(0.25))
+                    .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
+        .animation(.easeInOut(duration: 0.25), value: app.isReconnecting)
         .sheet(isPresented: $showKeyboard) {
             KeyboardSheet()
                 .presentationDetents([.height(220)])
@@ -72,74 +98,74 @@ struct RemoteView: View {
 
     // MARK: - Clusters
 
-    private var topRow: some View {
+    private var topCluster: some View {
         HStack {
-            keyButton(.back, "chevron.backward", label: "Back")
+            key(.back, "arrow.backward", label: "Back", haptic: Haptics.light)
             Spacer()
-            if isTV {
-                keyButton(.power, "power", label: "Power")
-                    .tint(.red)
-                Spacer()
+            key(.instantReplay, "arrow.uturn.backward", label: "Instant replay", haptic: Haptics.light)
+            Spacer()
+            key(.info, "asterisk", label: "Options", haptic: Haptics.light)
+            Spacer()
+            key(.home, "house.fill", label: "Home", haptic: Haptics.medium)
+        }
+        .padding(.horizontal, 8)
+    }
+
+    private var mediaCluster: some View {
+        HStack(spacing: 28) {
+            key(.rev, "backward.fill", label: "Rewind", haptic: Haptics.light)
+            key(.play, "playpause.fill", label: "Play or pause", haptic: Haptics.medium, diameter: 64)
+            key(.fwd, "forward.fill", label: "Fast forward", haptic: Haptics.light)
+        }
+    }
+
+    private var volumeCluster: some View {
+        HStack(spacing: 28) {
+            key(.volumeMute, "speaker.slash.fill", label: "Mute", haptic: Haptics.medium)
+            HoldKeyButton(key: .volumeDown, symbol: "speaker.minus.fill", label: "Volume down, hold to ramp")
+            HoldKeyButton(key: .volumeUp, symbol: "speaker.plus.fill", label: "Volume up, hold to ramp")
+        }
+    }
+
+    private var quickActions: some View {
+        HStack(spacing: 14) {
+            Button {
+                Haptics.light()
+                showKeyboard = true
+            } label: {
+                Label("Keyboard", systemImage: "keyboard")
             }
-            keyButton(.home, "house", label: "Home")
-        }
-        .padding(.horizontal, 24)
-    }
+            .buttonStyle(CapsuleActionStyle())
+            .accessibilityHint("Type on the Roku with your phone keyboard")
 
-    private var dPad: some View {
-        VStack(spacing: 8) {
-            keyButton(.up, "chevron.up", label: "Up", size: 64)
-            HStack(spacing: 8) {
-                keyButton(.left, "chevron.backward", label: "Left", size: 64)
-                Button {
-                    app.send(.select)
-                } label: {
-                    Text("OK")
-                        .font(.title2.bold())
-                        .frame(width: 84, height: 84)
-                }
-                .buttonStyle(.borderedProminent)
-                .accessibilityLabel("Select")
-                keyButton(.right, "chevron.forward", label: "Right", size: 64)
+            Button {
+                Haptics.light()
+                showChannels = true
+            } label: {
+                Label("Channels", systemImage: "square.grid.3x3")
             }
-            keyButton(.down, "chevron.down", label: "Down", size: 64)
+            .buttonStyle(CapsuleActionStyle())
+            .accessibilityHint("Browse and launch installed channels")
+
+            Button {
+                Haptics.light()
+                app.send(.search)
+            } label: {
+                Label("Search", systemImage: "magnifyingglass")
+            }
+            .buttonStyle(CapsuleActionStyle())
         }
     }
 
-    private var secondaryRow: some View {
-        HStack(spacing: 24) {
-            keyButton(.instantReplay, "arrow.uturn.backward", label: "Instant replay")
-            keyButton(.info, "asterisk", label: "Options")
-            keyButton(.search, "magnifyingglass", label: "Search")
-        }
-    }
-
-    private var transportRow: some View {
-        HStack(spacing: 24) {
-            keyButton(.rev, "backward.fill", label: "Rewind")
-            keyButton(.play, "playpause.fill", label: "Play or pause")
-            keyButton(.fwd, "forward.fill", label: "Fast forward")
-        }
-    }
-
-    private var volumeRow: some View {
-        HStack(spacing: 24) {
-            keyButton(.volumeMute, "speaker.slash.fill", label: "Mute")
-            keyButton(.volumeDown, "speaker.minus.fill", label: "Volume down")
-            keyButton(.volumeUp, "speaker.plus.fill", label: "Volume up")
-        }
-    }
-
-    private func keyButton(_ key: ECPKey, _ symbol: String,
-                           label: String, size: CGFloat = 52) -> some View {
+    private func key(_ ecpKey: ECPKey, _ symbol: String, label: String,
+                     haptic: @escaping () -> Void, diameter: CGFloat = 52) -> some View {
         Button {
-            app.send(key)
+            haptic()
+            app.send(ecpKey)
         } label: {
             Image(systemName: symbol)
-                .font(.title3)
-                .frame(width: size, height: size)
         }
-        .buttonStyle(.bordered)
+        .buttonStyle(RemoteKeyStyle(diameter: diameter))
         .accessibilityLabel(label)
     }
 }

@@ -15,8 +15,24 @@ struct ChannelGridView: View {
         NavigationStack {
             Group {
                 if isLoading {
-                    ProgressView("Loading channels…")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    // Skeleton shimmer while /query/apps + icons load (Phase 3 task 4).
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 16) {
+                            ForEach(0..<12, id: \.self) { _ in
+                                VStack(spacing: 6) {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Theme.keyFill)
+                                        .frame(width: 96, height: 72)
+                                        .shimmer()
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .fill(Theme.keyFill)
+                                        .frame(width: 64, height: 10)
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                    .accessibilityLabel("Loading channels")
                 } else if apps.isEmpty {
                     VStack(spacing: 8) {
                         Text("Couldn't load channels")

@@ -111,6 +111,13 @@ final class AppState: ObservableObject {
         }
     }
 
+    /// Marks a device as default (auto-reconnect target) without connecting.
+    func setDefault(_ device: RokuDevice) {
+        store.setLastConnected(device)
+        devices = store.devices
+        objectWillChange.send()
+    }
+
     func rename(_ device: RokuDevice, to name: String) {
         store.rename(serial: device.serialNumber, to: name)
         devices = store.devices
@@ -135,6 +142,18 @@ final class AppState: ObservableObject {
     func launchChannel(_ app: RokuApp) {
         guard let device else { return }
         Task { await perform { try await self.client.launch(appID: app.id, ip: device.ip) } }
+    }
+
+    /// Press-and-hold support (volume ramping): Roku auto-repeats between
+    /// keydown and keyup.
+    func beginHold(_ key: ECPKey) {
+        guard let device else { return }
+        Task { await perform { try await self.client.keydown(key, ip: device.ip) } }
+    }
+
+    func endHold(_ key: ECPKey) {
+        guard let device else { return }
+        Task { await perform { try await self.client.keyup(key, ip: device.ip) } }
     }
 
     func typeText(_ text: String) {

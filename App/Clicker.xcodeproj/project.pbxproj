@@ -7,38 +7,54 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B3019E864D58B662F403FD1 /* DPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D05F4ED738B2A673306477 /* DPadView.swift */; };
 		27199C4848B9DFE740480B72 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761BD3F1873C5FBDC55A8300 /* ContentView.swift */; };
+		27D45A513D64FB3402F7F63D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4395F262863AB9132E7CAC /* SettingsView.swift */; };
 		42FCE0819CEAA363860A5FC0 /* ManualIPSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABFF23FECD77FFDC14C8F37 /* ManualIPSheet.swift */; };
+		4CD15282E8CD872872EF7914 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02088F4CAF012AAE25985B24 /* ButtonStyles.swift */; };
 		4F37CC066089EFA156B935F2 /* RokuKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4A17A93503E15B30416E299C /* RokuKit */; };
 		5205B708C5D3114261A0233B /* RemoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F988BF6FAB3CC9A596F72DD /* RemoteView.swift */; };
 		6FC30772C9B0EBA690ECC88B /* DiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFCD7B9660D8DB6EC2C8509 /* DiscoveryView.swift */; };
 		9CC5949A4A893316C94EDBAE /* KeyboardSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9EA07AFC315837454B24A9 /* KeyboardSheet.swift */; };
 		9CCC4F18CBDC91FEE0752535 /* ClickerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E323900EBDD52182BA686B /* ClickerApp.swift */; };
 		9FD270335D559025095CEE12 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D91DEE986DAE223D62E8F /* HelpView.swift */; };
+		A7B74FD7155FE6E813DD7D8F /* HoldKeyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4300AF76AB991E1FE71694B5 /* HoldKeyButton.swift */; };
 		A996EFB6E4EB1747FE40DCE9 /* ChannelGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2103DEAEAA5CEAD7FE00AD4C /* ChannelGridView.swift */; };
 		D3977EEA2738B8D1127355D4 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7475EA5CD730AEF330FB6E /* OnboardingView.swift */; };
+		D98B77ECE974FA4551A463CC /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8BE6C03B316CFE4C75BAAD /* Theme.swift */; };
+		DA6F6B8C676F2E0271011B63 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6858DE05613A01A3B29D6E07 /* Haptics.swift */; };
 		DC8FF22FE89AC44E5798EAA1 /* IconCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73910C186D61F202E122C715 /* IconCache.swift */; };
+		F79825D6CB6700AFFB8D7652 /* StatusPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF386EA66BF0568970AC3BB /* StatusPill.swift */; };
+		FE4844203BC8BDAB5851E0AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA201205D27215063FF81850 /* Assets.xcassets */; };
 		FF02B84A5A129D7B83E56C69 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CFFFA2611CC2AC9E399766 /* AppState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		02088F4CAF012AAE25985B24 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
 		0AABF8E231C487DB8F9F1C8B /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		16BA7E45118036E67A92DA6C /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		1A805F43FF7DF4A82EF72E18 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		1E4395F262863AB9132E7CAC /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		2103DEAEAA5CEAD7FE00AD4C /* ChannelGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelGridView.swift; sourceTree = "<group>"; };
 		29CFFFA2611CC2AC9E399766 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		2F4ECA2284D58A1FD5C48F43 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		3CC265C9F4D074DF9BF504AD /* Clicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4300AF76AB991E1FE71694B5 /* HoldKeyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldKeyButton.swift; sourceTree = "<group>"; };
+		6858DE05613A01A3B29D6E07 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		6A7475EA5CD730AEF330FB6E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		6ABFF23FECD77FFDC14C8F37 /* ManualIPSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualIPSheet.swift; sourceTree = "<group>"; };
 		73910C186D61F202E122C715 /* IconCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCache.swift; sourceTree = "<group>"; };
 		761BD3F1873C5FBDC55A8300 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		7CF386EA66BF0568970AC3BB /* StatusPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusPill.swift; sourceTree = "<group>"; };
 		85E323900EBDD52182BA686B /* ClickerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickerApp.swift; sourceTree = "<group>"; };
+		87D05F4ED738B2A673306477 /* DPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPadView.swift; sourceTree = "<group>"; };
 		8A9EA07AFC315837454B24A9 /* KeyboardSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSheet.swift; sourceTree = "<group>"; };
 		9F988BF6FAB3CC9A596F72DD /* RemoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteView.swift; sourceTree = "<group>"; };
 		AF5D91DEE986DAE223D62E8F /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		BA201205D27215063FF81850 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BA9D39B2C6B3AB84044DB4F3 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		BCFCD7B9660D8DB6EC2C8509 /* DiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryView.swift; sourceTree = "<group>"; };
+		BF8BE6C03B316CFE4C75BAAD /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		C03D292420EB5ECEF6110ED7 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		D8B2440744E325B10EE4ED62 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		DB7224CFD9BE04B98CD24B2B /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
@@ -61,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				1A805F43FF7DF4A82EF72E18 /* .gitkeep */,
+				1E4395F262863AB9132E7CAC /* SettingsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -86,6 +103,10 @@
 			isa = PBXGroup;
 			children = (
 				16BA7E45118036E67A92DA6C /* .gitkeep */,
+				02088F4CAF012AAE25985B24 /* ButtonStyles.swift */,
+				6858DE05613A01A3B29D6E07 /* Haptics.swift */,
+				7CF386EA66BF0568970AC3BB /* StatusPill.swift */,
+				BF8BE6C03B316CFE4C75BAAD /* Theme.swift */,
 			);
 			path = DesignSystem;
 			sourceTree = "<group>";
@@ -94,6 +115,8 @@
 			isa = PBXGroup;
 			children = (
 				D8B2440744E325B10EE4ED62 /* .gitkeep */,
+				87D05F4ED738B2A673306477 /* DPadView.swift */,
+				4300AF76AB991E1FE71694B5 /* HoldKeyButton.swift */,
 				9F988BF6FAB3CC9A596F72DD /* RemoteView.swift */,
 			);
 			path = Remote;
@@ -120,6 +143,7 @@
 		7B009DCCB8AE058797989E3E /* Clicker */ = {
 			isa = PBXGroup;
 			children = (
+				BA201205D27215063FF81850 /* Assets.xcassets */,
 				F8730757C227A935337455CE /* App */,
 				3D36B1F3CF3580619385DEFC /* DesignSystem */,
 				C0DED8EAACB294E6280E1380 /* Features */,
@@ -196,6 +220,7 @@
 			buildConfigurationList = 6E582F00E1DC75973111FB5B /* Build configuration list for PBXNativeTarget "Clicker" */;
 			buildPhases = (
 				87A38DEB6741CF9913EC6968 /* Sources */,
+				ECED495C4437525E91BA299C /* Resources */,
 				4B05FD37076BDCB9DFCD6684 /* Frameworks */,
 			);
 			buildRules = (
@@ -241,22 +266,40 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		ECED495C4437525E91BA299C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE4844203BC8BDAB5851E0AC /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		87A38DEB6741CF9913EC6968 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				FF02B84A5A129D7B83E56C69 /* AppState.swift in Sources */,
+				4CD15282E8CD872872EF7914 /* ButtonStyles.swift in Sources */,
 				A996EFB6E4EB1747FE40DCE9 /* ChannelGridView.swift in Sources */,
 				9CCC4F18CBDC91FEE0752535 /* ClickerApp.swift in Sources */,
 				27199C4848B9DFE740480B72 /* ContentView.swift in Sources */,
+				0B3019E864D58B662F403FD1 /* DPadView.swift in Sources */,
 				6FC30772C9B0EBA690ECC88B /* DiscoveryView.swift in Sources */,
+				DA6F6B8C676F2E0271011B63 /* Haptics.swift in Sources */,
 				9FD270335D559025095CEE12 /* HelpView.swift in Sources */,
+				A7B74FD7155FE6E813DD7D8F /* HoldKeyButton.swift in Sources */,
 				DC8FF22FE89AC44E5798EAA1 /* IconCache.swift in Sources */,
 				9CC5949A4A893316C94EDBAE /* KeyboardSheet.swift in Sources */,
 				42FCE0819CEAA363860A5FC0 /* ManualIPSheet.swift in Sources */,
 				D3977EEA2738B8D1127355D4 /* OnboardingView.swift in Sources */,
 				5205B708C5D3114261A0233B /* RemoteView.swift in Sources */,
+				27D45A513D64FB3402F7F63D /* SettingsView.swift in Sources */,
+				F79825D6CB6700AFFB8D7652 /* StatusPill.swift in Sources */,
+				D98B77ECE974FA4551A463CC /* Theme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,17 +310,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YZSL25MTN9;
 				INFOPLIST_FILE = Support/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Clicker;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.catchergriffin.clicker;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.10;
@@ -345,17 +387,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YZSL25MTN9;
 				INFOPLIST_FILE = Support/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Clicker;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.catchergriffin.clicker;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.10;

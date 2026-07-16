@@ -8,7 +8,8 @@ struct ClickerApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(appState)
-                .preferredColorScheme(.dark) // dark-mode-first per design principles
+                .tint(Theme.accent)
+                // Dark-mode-first; light mode supported via dynamic Theme colors.
         }
     }
 }

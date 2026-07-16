@@ -65,6 +65,16 @@ struct DiscoveryView: View {
             }
         }
         .navigationTitle("Clicker")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink {
+                    SettingsView()
+                } label: {
+                    Image(systemName: "gearshape")
+                }
+                .accessibilityLabel("Settings")
+            }
+        }
         .refreshable {
             app.startScan()
         }
