@@ -10,7 +10,7 @@ struct ContentView: View {
         Group {
             if case .connected = app.connection {
                 NavigationStack {
-                    RemoteView()
+                    RemoteControlView()
                 }
             } else if hasOnboarded {
                 NavigationStack {

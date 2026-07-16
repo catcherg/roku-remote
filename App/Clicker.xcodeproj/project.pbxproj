@@ -15,6 +15,7 @@
 		4F37CC066089EFA156B935F2 /* RokuKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4A17A93503E15B30416E299C /* RokuKit */; };
 		5205B708C5D3114261A0233B /* RemoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F988BF6FAB3CC9A596F72DD /* RemoteView.swift */; };
 		6FC30772C9B0EBA690ECC88B /* DiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFCD7B9660D8DB6EC2C8509 /* DiscoveryView.swift */; };
+		9C081CEDD9C0D918221A2BF4 /* RemoteControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B06DB171C260BA416AA7D9 /* RemoteControlView.swift */; };
 		9CC5949A4A893316C94EDBAE /* KeyboardSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9EA07AFC315837454B24A9 /* KeyboardSheet.swift */; };
 		9CCC4F18CBDC91FEE0752535 /* ClickerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E323900EBDD52182BA686B /* ClickerApp.swift */; };
 		9FD270335D559025095CEE12 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D91DEE986DAE223D62E8F /* HelpView.swift */; };
@@ -31,6 +32,7 @@
 
 /* Begin PBXFileReference section */
 		02088F4CAF012AAE25985B24 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
+		05B06DB171C260BA416AA7D9 /* RemoteControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteControlView.swift; sourceTree = "<group>"; };
 		0AABF8E231C487DB8F9F1C8B /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		16BA7E45118036E67A92DA6C /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		1A805F43FF7DF4A82EF72E18 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 				D8B2440744E325B10EE4ED62 /* .gitkeep */,
 				87D05F4ED738B2A673306477 /* DPadView.swift */,
 				4300AF76AB991E1FE71694B5 /* HoldKeyButton.swift */,
+				05B06DB171C260BA416AA7D9 /* RemoteControlView.swift */,
 				9F988BF6FAB3CC9A596F72DD /* RemoteView.swift */,
 			);
 			path = Remote;
@@ -296,6 +299,7 @@
 				9CC5949A4A893316C94EDBAE /* KeyboardSheet.swift in Sources */,
 				42FCE0819CEAA363860A5FC0 /* ManualIPSheet.swift in Sources */,
 				D3977EEA2738B8D1127355D4 /* OnboardingView.swift in Sources */,
+				9C081CEDD9C0D918221A2BF4 /* RemoteControlView.swift in Sources */,
 				5205B708C5D3114261A0233B /* RemoteView.swift in Sources */,
 				27D45A513D64FB3402F7F63D /* SettingsView.swift in Sources */,
 				F79825D6CB6700AFFB8D7652 /* StatusPill.swift in Sources */,
