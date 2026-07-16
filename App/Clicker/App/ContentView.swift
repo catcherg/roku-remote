@@ -1,21 +1,29 @@
 import SwiftUI
 import RokuKit
 
-/// Phase 0 placeholder. Replaced by the real app shell in Phase 2.
+/// Routes on the connection state machine — the enum drives all UI (§2.2).
 struct ContentView: View {
+    @EnvironmentObject private var app: AppState
+    @AppStorage("hasOnboarded") private var hasOnboarded = false
+
     var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: "av.remote")
-                .font(.system(size: 48))
-            Text("Clicker")
-                .font(.title.bold())
-            Text("RokuKit v\(RokuKit.version)")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+        Group {
+            if case .connected = app.connection {
+                NavigationStack {
+                    RemoteView()
+                }
+            } else if hasOnboarded {
+                NavigationStack {
+                    DiscoveryView()
+                }
+            } else {
+                OnboardingView()
+            }
+        }
+        .task {
+            if hasOnboarded {
+                await app.autoReconnect()
+            }
         }
     }
-}
-
-#Preview {
-    ContentView()
 }

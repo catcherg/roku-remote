@@ -12,7 +12,10 @@ public enum ECPError: Error, Equatable {
 
 /// All ECP HTTP commands. Fire-and-forget semantics: success == HTTP 2xx, empty body.
 /// 2s timeout, no retries at this layer (per CLAUDE.md / roadmap §1.1).
-public struct ECPClient {
+///
+/// @unchecked Sendable: immutable struct whose only stored property is a
+/// URLSession, which is documented thread-safe.
+public struct ECPClient: @unchecked Sendable {
     public static let port = 8060
     private let session: URLSession
 

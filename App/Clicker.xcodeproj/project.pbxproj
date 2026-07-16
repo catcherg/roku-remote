@@ -8,22 +8,40 @@
 
 /* Begin PBXBuildFile section */
 		27199C4848B9DFE740480B72 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761BD3F1873C5FBDC55A8300 /* ContentView.swift */; };
+		42FCE0819CEAA363860A5FC0 /* ManualIPSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABFF23FECD77FFDC14C8F37 /* ManualIPSheet.swift */; };
 		4F37CC066089EFA156B935F2 /* RokuKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4A17A93503E15B30416E299C /* RokuKit */; };
+		5205B708C5D3114261A0233B /* RemoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F988BF6FAB3CC9A596F72DD /* RemoteView.swift */; };
+		6FC30772C9B0EBA690ECC88B /* DiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFCD7B9660D8DB6EC2C8509 /* DiscoveryView.swift */; };
+		9CC5949A4A893316C94EDBAE /* KeyboardSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9EA07AFC315837454B24A9 /* KeyboardSheet.swift */; };
 		9CCC4F18CBDC91FEE0752535 /* ClickerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E323900EBDD52182BA686B /* ClickerApp.swift */; };
+		9FD270335D559025095CEE12 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D91DEE986DAE223D62E8F /* HelpView.swift */; };
+		A996EFB6E4EB1747FE40DCE9 /* ChannelGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2103DEAEAA5CEAD7FE00AD4C /* ChannelGridView.swift */; };
+		D3977EEA2738B8D1127355D4 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7475EA5CD730AEF330FB6E /* OnboardingView.swift */; };
+		DC8FF22FE89AC44E5798EAA1 /* IconCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73910C186D61F202E122C715 /* IconCache.swift */; };
+		FF02B84A5A129D7B83E56C69 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CFFFA2611CC2AC9E399766 /* AppState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0AABF8E231C487DB8F9F1C8B /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
-		16BA7E45118036E67A92DA6C /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
-		1A805F43FF7DF4A82EF72E18 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
-		2F4ECA2284D58A1FD5C48F43 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
-		3CC265C9F4D074DF9BF504AD /* Clicker.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Clicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AABF8E231C487DB8F9F1C8B /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		16BA7E45118036E67A92DA6C /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		1A805F43FF7DF4A82EF72E18 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		2103DEAEAA5CEAD7FE00AD4C /* ChannelGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelGridView.swift; sourceTree = "<group>"; };
+		29CFFFA2611CC2AC9E399766 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		2F4ECA2284D58A1FD5C48F43 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		3CC265C9F4D074DF9BF504AD /* Clicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A7475EA5CD730AEF330FB6E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		6ABFF23FECD77FFDC14C8F37 /* ManualIPSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualIPSheet.swift; sourceTree = "<group>"; };
+		73910C186D61F202E122C715 /* IconCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCache.swift; sourceTree = "<group>"; };
 		761BD3F1873C5FBDC55A8300 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		85E323900EBDD52182BA686B /* ClickerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickerApp.swift; sourceTree = "<group>"; };
-		BA9D39B2C6B3AB84044DB4F3 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
-		C03D292420EB5ECEF6110ED7 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
-		D8B2440744E325B10EE4ED62 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
-		DB7224CFD9BE04B98CD24B2B /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		8A9EA07AFC315837454B24A9 /* KeyboardSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSheet.swift; sourceTree = "<group>"; };
+		9F988BF6FAB3CC9A596F72DD /* RemoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteView.swift; sourceTree = "<group>"; };
+		AF5D91DEE986DAE223D62E8F /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		BA9D39B2C6B3AB84044DB4F3 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		BCFCD7B9660D8DB6EC2C8509 /* DiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryView.swift; sourceTree = "<group>"; };
+		C03D292420EB5ECEF6110ED7 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		D8B2440744E325B10EE4ED62 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		DB7224CFD9BE04B98CD24B2B /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		F91BAB31105558DD432AEE71 /* RokuKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RokuKit; path = ../RokuKit; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -59,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				DB7224CFD9BE04B98CD24B2B /* .gitkeep */,
+				6A7475EA5CD730AEF330FB6E /* OnboardingView.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -75,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				D8B2440744E325B10EE4ED62 /* .gitkeep */,
+				9F988BF6FAB3CC9A596F72DD /* RemoteView.swift */,
 			);
 			path = Remote;
 			sourceTree = "<group>";
@@ -83,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				2F4ECA2284D58A1FD5C48F43 /* .gitkeep */,
+				8A9EA07AFC315837454B24A9 /* KeyboardSheet.swift */,
 			);
 			path = Keyboard;
 			sourceTree = "<group>";
@@ -110,6 +131,8 @@
 			isa = PBXGroup;
 			children = (
 				C03D292420EB5ECEF6110ED7 /* .gitkeep */,
+				BCFCD7B9660D8DB6EC2C8509 /* DiscoveryView.swift */,
+				6ABFF23FECD77FFDC14C8F37 /* ManualIPSheet.swift */,
 			);
 			path = Discovery;
 			sourceTree = "<group>";
@@ -126,6 +149,8 @@
 			isa = PBXGroup;
 			children = (
 				0AABF8E231C487DB8F9F1C8B /* .gitkeep */,
+				2103DEAEAA5CEAD7FE00AD4C /* ChannelGridView.swift */,
+				73910C186D61F202E122C715 /* IconCache.swift */,
 			);
 			path = Channels;
 			sourceTree = "<group>";
@@ -134,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				BA9D39B2C6B3AB84044DB4F3 /* .gitkeep */,
+				AF5D91DEE986DAE223D62E8F /* HelpView.swift */,
 			);
 			path = Help;
 			sourceTree = "<group>";
@@ -155,6 +181,7 @@
 		F8730757C227A935337455CE /* App */ = {
 			isa = PBXGroup;
 			children = (
+				29CFFFA2611CC2AC9E399766 /* AppState.swift */,
 				85E323900EBDD52182BA686B /* ClickerApp.swift */,
 				761BD3F1873C5FBDC55A8300 /* ContentView.swift */,
 			);
@@ -191,8 +218,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = F8657E3A8FAFAC745F72D5C1 /* Build configuration list for PBXProject "Clicker" */;
 			developmentRegion = en;
@@ -221,8 +246,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF02B84A5A129D7B83E56C69 /* AppState.swift in Sources */,
+				A996EFB6E4EB1747FE40DCE9 /* ChannelGridView.swift in Sources */,
 				9CCC4F18CBDC91FEE0752535 /* ClickerApp.swift in Sources */,
 				27199C4848B9DFE740480B72 /* ContentView.swift in Sources */,
+				6FC30772C9B0EBA690ECC88B /* DiscoveryView.swift in Sources */,
+				9FD270335D559025095CEE12 /* HelpView.swift in Sources */,
+				DC8FF22FE89AC44E5798EAA1 /* IconCache.swift in Sources */,
+				9CC5949A4A893316C94EDBAE /* KeyboardSheet.swift in Sources */,
+				42FCE0819CEAA363860A5FC0 /* ManualIPSheet.swift in Sources */,
+				D3977EEA2738B8D1127355D4 /* OnboardingView.swift in Sources */,
+				5205B708C5D3114261A0233B /* RemoteView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,7 +269,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YZSL25MTN9;
 				INFOPLIST_FILE = Support/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Clicker;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -310,7 +347,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YZSL25MTN9;
 				INFOPLIST_FILE = Support/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Clicker;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
