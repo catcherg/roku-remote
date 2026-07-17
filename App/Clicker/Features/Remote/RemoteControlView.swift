@@ -2,11 +2,11 @@ import SwiftUI
 import UIKit
 import RokuKit
 
-/// Eyes-free remote (UI overhaul spec). The user is looking at the TV, not the
-/// phone: a massive swipe surface dominates the upper half — swipe to navigate
-/// (velocity-scaled, strictly 4-directional), tap anywhere to Select — with a
-/// high-contrast utility grid below. Haptics are the primary feedback channel:
-/// one crisp light tick per swipe/tap, a heavier thud for OK and Back.
+/// Eyes-free remote. A large swipe surface dominates the top half — swipe to
+/// navigate (velocity-scaled, strictly 4-directional), tap anywhere to Select —
+/// with a flexible utility grid filling the rest of the screen. Haptics are the
+/// primary feedback channel; the visual layer is a direction-aware gradient
+/// sweep that never competes with the TV for attention.
 /// All commands route through AppState → RokuKit's ECPClient.
 struct RemoteControlView: View {
     @EnvironmentObject private var app: AppState
@@ -24,20 +24,57 @@ struct RemoteControlView: View {
                     onSwipe: { direction, repeats in swipe(direction, repeats: repeats) },
                     onSelect: select
                 )
-                .frame(height: max(proxy.size.height * 0.52, 280))
+                .frame(height: max(proxy.size.height * 0.5, 260))
 
-                utilityGrid
-
-                if isTV {
-                    volumeRow
+                // Flexible control area: absorbs all remaining height so there
+                // is no dead space on tall phones, and compresses gracefully
+                // on small ones.
+                VStack(spacing: 16) {
+                    HStack(spacing: 16) {
+                        gridKey(.back, "arrow.backward", "Back") {
+                            haptics.thud(.medium) // heavier thud; never a dialog
+                            app.send(.back)
+                        }
+                        gridKey(.home, "house.fill", "Home") {
+                            haptics.tick()
+                            app.send(.home)
+                        }
+                    }
+                    HStack(spacing: 16) {
+                        gridKey(.play, "playpause.fill", "Play or pause") {
+                            haptics.tick()
+                            app.send(.play)
+                        }
+                        if isTV {
+                            gridKey(.volumeMute, "speaker.slash.fill", "Mute") {
+                                haptics.tick()
+                                app.send(.volumeMute)
+                            }
+                        } else {
+                            // Sticks can't mute a TV over ECP (CLAUDE.md:
+                            // volume keys are TV-only) — no dead buttons.
+                            gridKey(.instantReplay, "arrow.uturn.backward", "Instant replay") {
+                                haptics.tick()
+                                app.send(.instantReplay)
+                            }
+                        }
+                    }
+                    if isTV {
+                        HStack(spacing: 16) {
+                            HoldKeyButton(key: .volumeDown, symbol: "speaker.minus.fill",
+                                          label: "Volume down, hold to ramp")
+                            HoldKeyButton(key: .volumeUp, symbol: "speaker.plus.fill",
+                                          label: "Volume up, hold to ramp")
+                        }
+                    }
                 }
+                .frame(maxHeight: .infinity)
 
                 quickActions
-
-                Spacer(minLength: 0)
             }
             .padding(.horizontal, 20)
             .padding(.top, 8)
+            .padding(.bottom, 12)
         }
         .background(Theme.background.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
@@ -115,40 +152,7 @@ struct RemoteControlView: View {
         app.send(.select)
     }
 
-    // MARK: - Utility grid (Back / Home / Play-Pause / Mute-or-Replay)
-
-    private var utilityGrid: some View {
-        LazyVGrid(
-            columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)],
-            spacing: 16
-        ) {
-            gridKey(.back, "arrow.backward", "Back") {
-                haptics.thud(.medium) // Back gets the heavier thud per spec;
-                app.send(.back)       // it never shows a confirmation dialog.
-            }
-            gridKey(.home, "house.fill", "Home") {
-                haptics.tick()
-                app.send(.home)
-            }
-            gridKey(.play, "playpause.fill", "Play or pause") {
-                haptics.tick()
-                app.send(.play)
-            }
-            if isTV {
-                gridKey(.volumeMute, "speaker.slash.fill", "Mute") {
-                    haptics.tick()
-                    app.send(.volumeMute)
-                }
-            } else {
-                // Sticks can't mute a TV over ECP (CLAUDE.md: volume keys are
-                // TV-only) — no dead buttons; Instant Replay earns the slot.
-                gridKey(.instantReplay, "arrow.uturn.backward", "Instant replay") {
-                    haptics.tick()
-                    app.send(.instantReplay)
-                }
-            }
-        }
-    }
+    // MARK: - Controls
 
     private func gridKey(_ key: ECPKey, _ symbol: String, _ label: String,
                          action: @escaping () -> Void) -> some View {
@@ -156,19 +160,11 @@ struct RemoteControlView: View {
             Image(systemName: symbol)
                 .font(.title2.weight(.medium))
                 .frame(maxWidth: .infinity)
-                .frame(height: 64)
+                .frame(minHeight: 64, maxHeight: 96)
+                .frame(maxHeight: .infinity)
         }
         .buttonStyle(GridKeyStyle())
         .accessibilityLabel(label)
-    }
-
-    private var volumeRow: some View {
-        HStack(spacing: 16) {
-            HoldKeyButton(key: .volumeDown, symbol: "speaker.minus.fill",
-                          label: "Volume down, hold to ramp")
-            HoldKeyButton(key: .volumeUp, symbol: "speaker.plus.fill",
-                          label: "Volume up, hold to ramp")
-        }
     }
 
     private var quickActions: some View {
@@ -209,12 +205,13 @@ private struct SwipeSurface: View {
     let onSwipe: (SwipeDirection, Int) -> Void
     let onSelect: () -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var flash: SwipeDirection?
+    @State private var activeTrail: [CGPoint] = []
+    @State private var fadingTrails: [Trail] = []
     @State private var selectPulse = false
 
     private let tapThreshold: CGFloat = 20
     private let dominanceRatio: CGFloat = 1.2
+    private let maxTrailPoints = 60
 
     var body: some View {
         ZStack {
@@ -233,19 +230,20 @@ private struct SwipeSurface: View {
             Circle()
                 .strokeBorder(Color.white.opacity(selectPulse ? 0.5 : 0.12), lineWidth: 1.5)
                 .frame(width: 72, height: 72)
+                .scaleEffect(selectPulse ? 1.12 : 1)
             Text("OK")
                 .font(.system(.footnote, design: .rounded).weight(.semibold))
                 .foregroundStyle(Color.white.opacity(selectPulse ? 0.8 : 0.25))
 
-            // Visual echo of the last swipe (secondary to the haptic).
-            if let flash {
-                Image(systemName: flash.symbol)
-                    .font(.system(size: 34, weight: .bold))
-                    .foregroundStyle(Theme.accent)
-                    .offset(flash.echoOffset)
-                    .transition(.opacity)
+            // Finger trail: draws live under the finger, then hangs for a
+            // beat and fades. Completed trails fade independently so rapid
+            // repeated swipes each read clearly.
+            TrailCanvas(points: activeTrail)
+            ForEach(fadingTrails) { trail in
+                FadingTrailView(points: trail.points)
             }
         }
+        .clipShape(RoundedRectangle(cornerRadius: 28))
         .contentShape(RoundedRectangle(cornerRadius: 28))
         .gesture(dragOrTap)
         .accessibilityElement()
@@ -261,7 +259,21 @@ private struct SwipeSurface: View {
 
     private var dragOrTap: some Gesture {
         DragGesture(minimumDistance: 0)
+            .onChanged { value in
+                // Track the finger. Throttled to ≥3pt steps and capped in
+                // length to keep Canvas redraws trivial (60/120fps safe).
+                if let last = activeTrail.last {
+                    let step = hypot(value.location.x - last.x, value.location.y - last.y)
+                    guard step > 3 else { return }
+                }
+                activeTrail.append(value.location)
+                if activeTrail.count > maxTrailPoints {
+                    activeTrail.removeFirst(activeTrail.count - maxTrailPoints)
+                }
+            }
             .onEnded { value in
+                retireTrail()
+
                 let dx = value.translation.width
                 let dy = value.translation.height
                 let distance = hypot(dx, dy)
@@ -287,23 +299,31 @@ private struct SwipeSurface: View {
             }
     }
 
+    /// Moves the live trail into the fading list; it lingers ~0.15s, fades
+    /// over ~0.45s (opacity only — safe under Reduce Motion), then is removed.
+    private func retireTrail() {
+        guard activeTrail.count > 1 else {
+            activeTrail = []
+            return
+        }
+        let trail = Trail(points: activeTrail)
+        fadingTrails.append(trail)
+        activeTrail = []
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 700_000_000)
+            fadingTrails.removeAll { $0.id == trail.id }
+        }
+    }
+
     private func fire(_ direction: SwipeDirection?, repeats: Int = 1) {
         if let direction {
             onSwipe(direction, repeats)
-            guard !reduceMotion else { return }
-            flash = direction
-            withAnimation(.easeOut(duration: 0.15)) {}
-            Task { @MainActor in
-                try? await Task.sleep(nanoseconds: 300_000_000)
-                withAnimation(.easeOut(duration: 0.2)) { flash = nil }
-            }
         } else {
             onSelect()
-            guard !reduceMotion else { return }
-            withAnimation(.easeOut(duration: 0.1)) { selectPulse = true }
+            withAnimation(.interactiveSpring(response: 0.15, dampingFraction: 0.7)) { selectPulse = true }
             Task { @MainActor in
-                try? await Task.sleep(nanoseconds: 200_000_000)
-                withAnimation(.easeOut(duration: 0.25)) { selectPulse = false }
+                try? await Task.sleep(nanoseconds: 180_000_000)
+                withAnimation(.easeOut(duration: 0.3)) { selectPulse = false }
             }
         }
     }
@@ -327,6 +347,58 @@ private struct SwipeSurface: View {
     }
 }
 
+private struct Trail: Identifiable {
+    let id = UUID()
+    let points: [CGPoint]
+}
+
+/// Comet-style finger trail: brighter and wider toward the fingertip, dimmer
+/// at the tail. Canvas + per-segment stroke keeps it a single cheap draw pass —
+/// no image assets, crisp at any size and frame rate.
+private struct TrailCanvas: View {
+    let points: [CGPoint]
+
+    var body: some View {
+        Canvas { context, _ in
+            guard points.count > 1 else { return }
+            let count = points.count
+            for index in 1..<count {
+                var segment = Path()
+                segment.move(to: points[index - 1])
+                segment.addLine(to: points[index])
+                // 0 at the tail → 1 at the fingertip.
+                let t = Double(index) / Double(count)
+                context.stroke(
+                    segment,
+                    with: .color(Theme.accent.opacity(0.12 + 0.7 * t)),
+                    style: StrokeStyle(lineWidth: 6 + 9 * t,
+                                       lineCap: .round, lineJoin: .round)
+                )
+            }
+        }
+        .blur(radius: 3)
+        .blendMode(.plusLighter)
+        .allowsHitTesting(false)
+    }
+}
+
+/// A completed trail: hangs for a brief moment, then fades out.
+/// Opacity-only animation, so it stays appropriate under Reduce Motion.
+private struct FadingTrailView: View {
+    let points: [CGPoint]
+    @State private var opacity: Double = 1
+
+    var body: some View {
+        TrailCanvas(points: points)
+            .opacity(opacity)
+            .onAppear {
+                withAnimation(.easeOut(duration: 0.45).delay(0.15)) {
+                    opacity = 0
+                }
+            }
+    }
+}
+
 private enum SwipeDirection: Equatable {
     case up, down, left, right
 
@@ -336,24 +408,6 @@ private enum SwipeDirection: Equatable {
         case .down: return .down
         case .left: return .left
         case .right: return .right
-        }
-    }
-
-    var symbol: String {
-        switch self {
-        case .up: return "chevron.up"
-        case .down: return "chevron.down"
-        case .left: return "chevron.left"
-        case .right: return "chevron.right"
-        }
-    }
-
-    var echoOffset: CGSize {
-        switch self {
-        case .up: return CGSize(width: 0, height: -90)
-        case .down: return CGSize(width: 0, height: 90)
-        case .left: return CGSize(width: -110, height: 0)
-        case .right: return CGSize(width: 110, height: 0)
         }
     }
 }
@@ -414,4 +468,11 @@ private struct GridKeyStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
             .animation(Theme.pressAnimation, value: configuration.isPressed)
     }
+}
+
+#Preview {
+    NavigationStack {
+        RemoteControlView()
+    }
+    .environmentObject(AppState())
 }
