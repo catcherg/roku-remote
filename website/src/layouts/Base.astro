@@ -1,9 +1,6 @@
 ---
 // Shared page shell: head, nav, footer. Local-only site — no analytics,
 // no trackers, no cookies, no CDNs (fonts are self-hosted via Fontsource).
-import "@fontsource-variable/archivo/wdth.css";
-import "@fontsource-variable/public-sans";
-import "@fontsource-variable/jetbrains-mono";
 import "../styles/global.css";
 
 interface Props {
@@ -22,6 +19,20 @@ const { title, description } = Astro.props;
     <meta name="description" content={description} />
     <meta name="theme-color" content="#F2F2F7" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="preload"
+      href="/fonts/archivo-latin-wdth.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Clicker" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {/* TODO(domain): add og:url, og:image (1200x630 share card) and a PNG
+        favicon fallback once the new domain exists. */}
     <title>{title}</title>
   </head>
   <body>
@@ -30,7 +41,10 @@ const { title, description } = Astro.props;
         <a href="/" class="wordmark" aria-label="Clicker home">
           clicker<span class="wordmark-cursor" aria-hidden="true">_</span>
         </a>
-        <span class="ecp nav-tag" aria-hidden="true">remote for Roku</span>
+        <div class="nav-right">
+          <span class="ecp nav-tag" aria-hidden="true">remote for Roku</span>
+          <a href="/#beta" class="nav-link">Get a beta invite</a>
+        </div>
       </div>
     </header>
 
@@ -87,8 +101,27 @@ const { title, description } = Astro.props;
 
   .wordmark-cursor { color: var(--teal); }
 
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space) * 3);
+  }
+
   .nav-tag { color: var(--ink-faint); }
   .nav-tag::before { content: none; }
+
+  @media (max-width: 560px) {
+    .nav-tag { display: none; } /* keep the action, drop the decoration */
+  }
+
+  .nav-link {
+    font-size: 15px;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .nav-link:hover { color: var(--teal-deep); text-decoration: underline; }
 
   .footer {
     border-top: 1px solid var(--line);

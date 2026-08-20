@@ -1,4 +1,6 @@
 ---
+import { Image } from "astro:assets";
+import channelsShot from "../assets/channels.png";
 // Three value props on the sand band (its one allowed appearance as a
 // surface), plus the channel-grid screenshot showing breadth.
 ---
@@ -6,7 +8,7 @@
 <section class="values">
   <div class="container">
     <p class="ecp">GET /query/device-info</p>
-    <h2>Three promises</h2>
+    <h2>Why pay once for a remote?</h2>
 
     <div class="values-grid">
       <div class="values-cards">
@@ -38,11 +40,11 @@
       <figure class="values-media">
         <div class="phone">
           <div class="phone-screen">
-            <img
-              src="/screenshots/channels.png"
+            <Image
+              src={channelsShot}
               alt="Clicker’s channel grid: your Roku channels with their icons, one tap to launch"
-              width="402"
-              height="874"
+              widths={[300, 450, 804]}
+              sizes="(min-width: 900px) 224px, 70vw"
               loading="lazy"
             />
           </div>
@@ -101,6 +103,8 @@
     background: #1a1a1e;
     box-shadow: 0 18px 36px -14px rgb(14 20 23 / 0.3);
   }
+
+  .phone-screen :global(img) { width: 100%; height: auto; }
 
   .phone-screen {
     border-radius: 32px;

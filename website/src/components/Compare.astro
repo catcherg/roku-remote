@@ -20,23 +20,23 @@
         <tbody>
           <tr>
             <th scope="row">Price</th>
-            <td class="col-us">One-time, yours forever</td>
-            <td class="col-them">Weekly subscription</td>
+            <td class="col-us" data-who="Clicker">One-time, yours forever</td>
+            <td class="col-them" data-who="Typical apps">Weekly subscription</td>
           </tr>
           <tr>
             <th scope="row">Ads</th>
-            <td class="col-us">Never</td>
-            <td class="col-them">Banner and video ads</td>
+            <td class="col-us" data-who="Clicker">Never</td>
+            <td class="col-them" data-who="Typical apps">Banner and video ads</td>
           </tr>
           <tr>
             <th scope="row">Trackers &amp; analytics</th>
-            <td class="col-us">None</td>
-            <td class="col-them">Usually several</td>
+            <td class="col-us" data-who="Clicker">None</td>
+            <td class="col-them" data-who="Typical apps">Usually several</td>
           </tr>
           <tr>
             <th scope="row">Account required</th>
-            <td class="col-us">No</td>
-            <td class="col-them">Often</td>
+            <td class="col-us" data-who="Clicker">No</td>
+            <td class="col-them" data-who="Typical apps">Often</td>
           </tr>
         </tbody>
       </table>
@@ -60,9 +60,57 @@
 
   table {
     width: 100%;
-    min-width: 560px;
     border-collapse: collapse;
     font-size: 16px;
+  }
+
+  @media (min-width: 561px) {
+    table { min-width: 560px; }
+  }
+
+  /* Under 560px the table re-flows into stacked blocks so the signal-red
+     column — the whole point of this section — is never scrolled off-screen. */
+  @media (max-width: 560px) {
+    .table-wrap { overflow-x: visible; }
+
+    thead { display: none; }
+
+    tbody, tbody tr, tbody th, tbody td { display: block; width: 100%; }
+
+    tbody tr {
+      padding-block: calc(var(--space) * 2);
+      border-bottom: 1px solid var(--line);
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody th {
+      padding: 0 0 var(--space);
+      border-bottom: none;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--ink-faint);
+      font-weight: 500;
+    }
+
+    tbody td {
+      padding: 2px 0 2px calc(var(--space) * 2.5);
+      border-bottom: none;
+      border-left: 3px solid currentColor;
+      margin-bottom: 4px;
+    }
+
+    /* thead is hidden here, so name the side explicitly — the meaning must
+       not rest on teal-vs-red alone. */
+    tbody td::before {
+      content: attr(data-who) " ";
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--ink-faint);
+      display: block;
+    }
   }
 
   th, td {

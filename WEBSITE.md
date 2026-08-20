@@ -18,7 +18,7 @@ no database, no waitlist system, no deploy, no analytics. The old domain
   genuinely needs client JS (the beta form and swipe animation are plain
   `<script>`).
 - Three pages: `index`, `privacy`, `terms`.
-- Fonts self-hosted via Fontsource. **No CDNs, no trackers, no cookies.**
+- Fonts self-hosted (latin subset, see Type below). **No CDNs, no trackers, no cookies.**
 
 ## Design (from the frontend-design skill's two-pass process)
 
@@ -47,21 +47,39 @@ serif + terracotta).
 - Body: **Public Sans**
 - Labels/eyebrows/microcopy: **JetBrains Mono** (the "hardware labeling" signature)
 - Inter is banned (frontend-design skill; also what the old site used).
+- Fonts are **hand-declared `@font-face` in `global.css`, latin subset only**,
+  from three woff2 files vendored into `public/fonts/`. Fontsource is NOT a
+  dependency — we copied the files and dropped the packages so we ship exactly
+  three font files. Display face is `<link rel=preload>`ed.
+
+### Signature
+
+The word **"deserves"** in the hero headline is set as a remote key: teal fill,
+ink text, rounded — exactly how the app draws a prominent key
+(`RemoteKeyStyle(prominent: true)`). This is the page's one typographic risk;
+everything around it stays quiet.
 
 ### Motion
 
-Exactly **one orchestrated moment**: the eyes-free swipe gesture animating in
-the hero (trail + direction feedback, echoing RemoteControlView). Everything
-else is static; hover/focus states only. All motion gated behind
+Exactly **one orchestrated moment**: a **single upward swipe** in the hero —
+fingertip travels, trail draws, the app answers with a chevron tick, 5s loop
+(echoing RemoteControlView's finger-tracking trail). A second rightward swipe
+was built and then deliberately cut — the "remove one accessory" pass.
+Everything else is static; hover/focus states only. All motion gated behind
 `prefers-reduced-motion`.
 
 ## Page structure (index)
 
-1. **Hero** — headline, trial line, **disabled App Store badge** (marked TODO
-   until launch), phone mockup + swipe animation
+1. **Hero** — headline, trial line, **"Get a beta invite" primary button** +
+   an **App Store status chip** (`App Store · soon` — deliberately NOT a
+   disabled button; a control must state what it does), phone mockup + swipe
+   animation
 2. **Eyes-free** — the differentiator section, dark full-width band
 3. **Value props** — one price / instant connection / private by design
-4. **Comparison table** — vs "typical remote apps" (signal color for their column)
+4. **Comparison table** — vs "typical remote apps" (signal color for their
+   column). Under 560px it **re-flows into stacked blocks** so the signal-red
+   column is never scrolled off-screen, with `data-who` labels naming each
+   side so meaning never rests on colour alone
 5. **Beta** — single email field → Formspree
 6. **FAQ** — 5 items: all Rokus? / after the 7 days? / same Wi-Fi? /
    account or internet needed? / how does the beta work?
@@ -93,9 +111,34 @@ exists (do not publish the developer's university email).
 
 ## Assets
 
-Two real screenshots from the iOS Simulator (iPhone 16 Pro, app in dark
-appearance, connected to a real Roku on the LAN): the swipe remote (hero)
-and the channel grid (value props).
+Two real screenshots from the iOS Simulator (**iPhone 17 Pro** — no 16 Pro
+runtime on this Mac; same 6.3" class, 402x874pt, app in dark appearance,
+connected to a real Roku on the LAN): the swipe remote (hero) and the channel
+grid (value props).
+
+**They live in `src/assets/`, not `public/`**, and are rendered with Astro's
+`<Image>` so the build emits responsive WebP (656kB of PNG → 14–48kB per
+served variant). To replace a screenshot: capture via
+`xcrun simctl io <udid> screenshot`, downscale to 804px wide
+(`sips --resampleWidth 804`), and overwrite the file in `src/assets/` — the
+build re-derives every variant. Note the swipe overlay in `Hero.astro` is
+positioned against a `402x874` viewBox; re-aim it if the capture device
+changes.
+
+## Round-2 decisions (UI tweak pass)
+
+Settled in a second grilling session after the first build:
+
+- App Store slot is a **status chip**, not a disabled button (Q1)
+- Hero signature is the **"deserves" key-cap** (Q2)
+- Hard `<br>` removed from the headline; `text-wrap: balance` handles it (Q3)
+- **Nav carries "Get a beta invite"** so the form is reachable from anywhere (Q4)
+- Comparison table **restacks under 560px** (Q5)
+- "Three promises" → **"Why pay once for a remote?"** (Q6)
+- **Second swipe cut** from the hero loop (Q7)
+- Screenshots moved to `src/assets/` + Astro `<Image>` (Q8)
+- **Latin-only self-hosted fonts**, Fontsource dropped as a dependency (Q9)
+- URL-independent **OG/Twitter meta added now**; `og:image` / `og:url` parked (Q10)
 
 ## Open items / blockers carried forward
 
@@ -105,4 +148,7 @@ and the channel grid (value props).
       `Theme.swift → AppInfo.privacyPolicyURL` still points at example.com
 - [ ] App must implement the trial: free download + $4.99 one-time IAP
       (StoreKit work, not website scope)
-- [ ] At launch: enable the App Store badge, wire the Formspree endpoint
+- [ ] At launch: swap the App Store status chip for Apple's official badge
+      asset, wire the Formspree endpoint
+- [ ] At deploy: `og:image` (1200x630 share card), `og:url`, PNG favicon
+      fallback, `robots.txt`

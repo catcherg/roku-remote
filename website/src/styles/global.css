@@ -7,7 +7,35 @@
    Palette derives from the app's asset catalog — see WEBSITE.md.
    ============================================================ */
 
-/* Fonts are imported in Base.astro via Fontsource (self-hosted, no CDN). */
+/* ---------- Fonts ----------
+   Self-hosted, latin subset only (files vendored from Fontsource into
+   /public/fonts). Declared by hand rather than importing Fontsource's CSS so
+   we ship exactly three font files and no unused subsets. */
+
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 100 900;
+  font-stretch: 62% 125%; /* the wdth axis — our display voice lives at ~118% */
+  font-display: swap;
+  src: url("/fonts/archivo-latin-wdth.woff2") format("woff2-variations");
+}
+
+@font-face {
+  font-family: "Public Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/public-sans-latin-wght.woff2") format("woff2-variations");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin-wght.woff2") format("woff2-variations");
+}
 
 :root {
   /* Color — 6 named values + reserved black */
@@ -31,9 +59,9 @@
   --teal-bright:    #3EDBC4; /* app's dark-mode accent — on-dark use only */
 
   /* Type */
-  --font-display: "Archivo Variable", "Archivo", "Helvetica Neue", sans-serif;
-  --font-body: "Public Sans Variable", "Public Sans", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Archivo", "Helvetica Neue", sans-serif;
+  --font-body: "Public Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
   /* Rhythm */
   --space: 8px;
@@ -137,14 +165,6 @@ a:hover { color: var(--ink); }
 
 .btn-primary { background: var(--ink); color: var(--ground); }
 .btn-primary:hover { background: var(--teal-deep); color: #fff; }
-
-.btn[disabled] {
-  background: transparent;
-  color: var(--ink-faint);
-  border: 1px solid var(--line);
-  cursor: not-allowed;
-}
-.btn[disabled]:active { transform: none; }
 
 /* Visually hidden (labels for screen readers) */
 .sr-only {
