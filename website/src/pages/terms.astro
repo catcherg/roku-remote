@@ -1,0 +1,82 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="Terms — Clicker"
+  description="Plain-language terms for the Clicker website and beta."
+>
+  <article class="container prose">
+    <p class="ecp">GET /terms</p>
+    <h1>Terms</h1>
+    <p class="updated">Last updated: August 19, 2026</p>
+
+    <h2>This site</h2>
+    <p>
+      This website is provided as-is, for information about the Clicker app
+      and for requesting a beta invite. We may change or take down any part of
+      it at any time.
+    </p>
+
+    <h2>The beta</h2>
+    <p>
+      Beta builds are distributed through Apple’s TestFlight and are covered
+      by Apple’s TestFlight terms. Beta software is unfinished by definition:
+      it may have bugs, and features may change or disappear before release.
+      Requesting an invite doesn’t guarantee one — spots open in small
+      batches.
+    </p>
+
+    <h2>The app</h2>
+    <p>
+      Clicker controls Roku devices using Roku’s openly documented External
+      Control Protocol over your local network. You’re responsible for using
+      it only with devices you’re allowed to control.
+    </p>
+
+    <h2>No warranty</h2>
+    <p>
+      To the maximum extent permitted by law, the site and the beta are
+      provided without warranties of any kind, and we’re not liable for
+      damages arising from their use.
+    </p>
+
+    <h2>Trademarks</h2>
+    <p>
+      Clicker is an independent project. It is not affiliated with or endorsed
+      by Roku, Inc. Roku is a trademark of Roku, Inc. Apple, TestFlight, and
+      App Store are trademarks of Apple Inc.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      <!-- TODO(domain): publish a contact address once the new domain and
+           its email exist. -->
+      A contact address will be published here when the site goes live.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .prose {
+    max-width: 680px;
+    padding-block: calc(var(--space) * 10);
+  }
+
+  .prose h1 { margin-top: calc(var(--space) * 3); }
+
+  .prose .updated {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin-top: var(--space);
+  }
+
+  .prose h2 {
+    font-size: 24px;
+    margin-top: calc(var(--space) * 5);
+    margin-bottom: calc(var(--space) * 1.5);
+  }
+
+  .prose p + p { margin-top: calc(var(--space) * 2); }
+</style>

@@ -1,0 +1,157 @@
+/* ============================================================
+   Clicker — global styles
+   Tokens + reset + base typography + shared utilities ONLY.
+   Section-specific styles live scoped inside their .astro
+   components (avoids the selector-specificity collisions the
+   frontend-design skill warns about).
+   Palette derives from the app's asset catalog — see WEBSITE.md.
+   ============================================================ */
+
+/* Fonts are imported in Base.astro via Fontsource (self-hosted, no CDN). */
+
+:root {
+  /* Color — 6 named values + reserved black */
+  --ground:    #F2F2F7; /* page background (app's light launch bg) */
+  --ink:       #0E1417; /* text */
+  --teal:      #0FA58B; /* accent — large marks, borders, fills (app AccentColor, light) */
+  --teal-deep: #0B7D69; /* links & small accent text (≥4.5:1 on ground) */
+  --sand:      #EDE3D4; /* secondary band surfaces ONLY — never the page ground */
+  --signal:    #B8452E; /* "typical remote apps" column + form errors ONLY */
+  --screen:    #000000; /* device-mockup screens only (app's OLED background) */
+
+  /* Derived neutrals (tints of ink on ground — not new hues) */
+  --ink-soft:  #3C4650; /* secondary text on light */
+  --ink-faint: #5B646D; /* muted text on light, ≥4.5:1 on ground */
+  --line:      #D8D8E0; /* hairlines on light */
+  --card:      #FFFFFF; /* card surface on ground/sand */
+
+  /* On-dark (used inside the eyes-free band; band bg is var(--ink)) */
+  --on-dark:        #EDF1F2;
+  --on-dark-soft:   #9AA6AD;
+  --teal-bright:    #3EDBC4; /* app's dark-mode accent — on-dark use only */
+
+  /* Type */
+  --font-display: "Archivo Variable", "Archivo", "Helvetica Neue", sans-serif;
+  --font-body: "Public Sans Variable", "Public Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+
+  /* Rhythm */
+  --space: 8px;
+  --radius-key: 18px;  /* echoes the app's remote-key corner radius */
+  --radius-pill: 999px;
+  --container: 1120px;
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  color-scheme: light; /* light-first, no dark mode yet — deliberate (WEBSITE.md) */
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img, svg { max-width: 100%; display: block; }
+img { height: auto; } /* keep aspect ratio when max-width shrinks a sized img */
+
+/* ---------- Type ---------- */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-stretch: 118%;            /* Archivo's wdth axis — the "Expanded" voice */
+  font-weight: 680;
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+h1 { font-size: clamp(40px, 6.4vw, 72px); }
+h2 { font-size: clamp(28px, 4.2vw, 44px); }
+h3 { font-size: 20px; font-stretch: 110%; line-height: 1.25; }
+
+p { color: var(--ink-soft); }
+
+a { color: var(--teal-deep); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--ink); }
+
+::selection { background: var(--teal); color: #fff; }
+
+:focus-visible {
+  outline: 2px solid var(--teal-deep);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Shared utilities ---------- */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: calc(var(--space) * 3);
+}
+
+/* Mono eyebrow — the ECP-command labeling system. Each section is tagged
+   with the real Roku ECP call it embodies; the footer decodes the device. */
+.ecp {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--teal-deep);
+  text-transform: none; /* ECP paths are case-sensitive; keep them verbatim */
+}
+
+.ecp::before { content: "▸ "; color: var(--teal); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  min-height: 52px;
+  padding: 0 28px;
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+  transition: transform 120ms ease-out, background 120ms ease-out;
+}
+
+.btn:active { transform: scale(0.97); } /* the app's key-press feel, on the web */
+
+.btn-primary { background: var(--ink); color: var(--ground); }
+.btn-primary:hover { background: var(--teal-deep); color: #fff; }
+
+.btn[disabled] {
+  background: transparent;
+  color: var(--ink-faint);
+  border: 1px solid var(--line);
+  cursor: not-allowed;
+}
+.btn[disabled]:active { transform: none; }
+
+/* Visually hidden (labels for screen readers) */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

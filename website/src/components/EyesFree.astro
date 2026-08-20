@@ -1,0 +1,56 @@
+---
+// The differentiator. Dark on purpose: eyes-free control matters when the
+// lights are off and the movie is on — the band IS the scenario, not a theme.
+// Band background is ink (page token); pure black stays reserved for
+// device screens.
+---
+
+<section class="eyesfree">
+  <div class="container">
+    <p class="ecp ecp-dark">POST /keypress/Up</p>
+    <h2>The lights are off.<br />The movie’s on.<br />Don’t look down.</h2>
+    <div class="eyesfree-cols">
+      <p>
+        Clicker’s remote is one big swipe surface. Swipe anywhere — up, down,
+        left, right — and it presses the matching key on your Roku, with a
+        haptic tick so you feel it register. Tap for OK.
+      </p>
+      <p>
+        No hunting for a button in the dark, no lighting up the room with your
+        phone. Your thumb knows the way, and your eyes never leave the screen.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .eyesfree {
+    background: var(--ink);
+    padding-block: calc(var(--space) * 14);
+  }
+
+  .eyesfree h2 {
+    color: var(--on-dark);
+    margin-top: calc(var(--space) * 3);
+    max-width: 14em;
+  }
+
+  .ecp-dark { color: var(--teal-bright); }
+  .ecp-dark::before { color: var(--teal-bright); }
+
+  .eyesfree-cols {
+    margin-top: calc(var(--space) * 5);
+    display: grid;
+    gap: calc(var(--space) * 4);
+    max-width: 62em;
+  }
+
+  @media (min-width: 720px) {
+    .eyesfree-cols { grid-template-columns: 1fr 1fr; }
+  }
+
+  .eyesfree-cols p {
+    color: var(--on-dark-soft);
+    font-size: 18px;
+  }
+</style>

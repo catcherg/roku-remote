@@ -8,7 +8,7 @@
 
 **Product:** A beautifully designed, dark-mode-optimized iOS app that discovers Roku devices on the local Wi-Fi network and controls them via Roku's official External Control Protocol (ECP).
 
-**Business model:** One-time upfront purchase (target: $4.99–$6.99). No ads, no subscriptions, no accounts, no backend. Viable because Roku ECP is an officially documented, stable REST API requiring near-zero ongoing maintenance.
+**Business model:** Free download with a 7-day free trial, then a $4.99 one-time in-app purchase unlocks the app forever (decided 2026-08-19 — supersedes the earlier paid-upfront plan). No ads, no subscriptions, no accounts, no backend. Viable because Roku ECP is an officially documented, stable REST API requiring near-zero ongoing maintenance.
 
 **Non-negotiable constraints:**
 - Roku devices ONLY. No Samsung/LG/Sony/Fire TV. Scope creep here kills the business model.
@@ -271,7 +271,7 @@ roku-remote/
 3. Feedback channel (TestFlight feedback + a simple email/form). Triage: crashes/connectivity = fix now; feature requests = v1.1 backlog. **Do not expand scope.**
 
 **Tasks — Website (in `website/`, deployed to GitHub Pages on the Namecheap domain):**
-4. Single-page static site: hero with app mockup screenshots, three value props ("One price. No ads. No subscriptions." / "Instant connection" / "Designed for Roku"), waitlist email form (Mailchimp free tier embed or Formspree free tier — pick whichever embeds cleanest into static HTML), trademark disclaimer footer.
+4. Website: see `WEBSITE.md` (authoritative). Local-only Astro landing page + privacy + terms; beta email form via Formspree; no accounts/waitlist system.
 5. `privacy.html` — required for App Store submission. Honest and short: "No data collected. No analytics. No accounts. All communication stays on your local network."
 6. Basic OpenGraph tags + favicon; Lighthouse ≥95.
 
@@ -287,7 +287,7 @@ roku-remote/
 **Goal:** Approved, live, purchasable.
 
 **Tasks:**
-1. **Pricing:** launch at $4.99 (Tier 5). Enroll in Small Business Program beforehand.
+1. **Pricing:** free download; 7-day free trial; $4.99 one-time IAP unlock (StoreKit non-consumable + trial gating). Enroll in Small Business Program beforehand.
 2. **Store assets:** 6.7" + 6.1" screenshots (device frames, dark, benefit-led captions), app preview video optional-but-valuable (screen-record the app controlling a real TV), subtitle ("The premium Roku remote. One price, forever."), keyword field (roku, remote, tv remote, ecp, streaming — no competitor trademarks beyond nominative "roku"), description emphasizing one-time price / no ads / privacy.
 3. **Review preparation:** Reviewer Notes explaining the Roku-on-same-network requirement + link to an unlisted demo video showing full functionality; double-check Guideline 5.2 compliance (name, icon, screenshots contain no Roku trade dress).
 4. Final release build: version 1.0.0, archived via CI, submitted.
@@ -295,7 +295,7 @@ roku-remote/
 6. Launch day: flip website from waitlist to App Store badge link; email the waitlist; post to r/Roku (transparently, per subreddit rules) and Product Hunt if desired.
 
 **Definition of Done:**
-- [ ] App live on the App Store at $4.99
+- [ ] App live on the App Store (free download, $4.99 one-time unlock after 7-day trial)
 - [ ] Website converted to launch mode; waitlist emailed
 - [ ] Tag `v1.0.0` 🎉
 
@@ -321,7 +321,7 @@ roku-remote/
 | 2 | App Review rejection (5.2 trademark) | Medium | Medium | Nominative naming, no trade dress, backup name prepared, disclaimer everywhere |
 | 3 | Local-network permission confusion → bad reviews | Medium | Medium | Onboarding explains before prompting; recovery screen; Help content |
 | 4 | Roku "Limited mode" support burden | Medium | Medium | Dedicated in-app troubleshooter with exact menu steps |
-| 5 | Paid-upfront conversion is weak | Medium | High | Premium screenshots/video must sell it; consider free-with-one-time-unlock IAP as a v1.1 pivot if sales flop (bigger funnel, same "one price" promise) |
+| 5 | Trial-to-purchase conversion is weak | Medium | High | Free-with-one-time-unlock IAP + 7-day trial IS the launch model (decided 2026-08-19). Premium screenshots/video and a strong end-of-trial screen must sell the unlock |
 | 6 | Roku deprecates/locks down ECP | Low | Fatal | Officially documented API used by Roku's own app; monitor developer.roku.com; accept as residual risk |
 | 7 | Developer's Apple fee waiver denied | Medium | Low | $99 is the accepted floor cost |
 

@@ -1,0 +1,190 @@
+---
+// Hero: headline + trial line + (disabled) App Store slot + the signature
+// moment — a phone running the real app, with the eyes-free swipe gesture
+// animating over the screenshot. This is the page's ONE orchestrated
+// animation (WEBSITE.md); everything below it stays still.
+---
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="ecp">POST /keypress/Select</p>
+      <h1>The remote<br />Roku deserves.</h1>
+      <p class="hero-sub">
+        Free for 7 days. Then one price, forever.
+        No ads, no subscriptions, no account.
+      </p>
+      <div class="hero-actions">
+        <!-- TODO(launch): replace with Apple’s official App Store badge asset
+             (download from Apple Marketing Tools — do not hand-draw the badge)
+             and link to the store page. -->
+        <button class="btn" disabled aria-describedby="store-note">
+          App Store
+        </button>
+        <span id="store-note" class="store-note">Coming soon — <a href="#beta">get a beta invite instead</a></span>
+      </div>
+    </div>
+
+    <div class="hero-device" aria-label="The Clicker remote screen on an iPhone">
+      <div class="phone">
+        <div class="phone-screen">
+          <img
+            src="/screenshots/remote.png"
+            alt="Clicker’s remote screen: a full-screen swipe surface with playback and volume keys"
+            width="402"
+            height="874"
+            fetchpriority="high"
+          />
+          <!-- Swipe-gesture overlay: a fingertip draws a trail up, the app
+               answers with a chevron tick; then the same to the right.
+               Mirrors RemoteControlView's finger-tracking trail. -->
+          <svg
+            class="swipe"
+            viewBox="0 0 402 874"
+            aria-hidden="true"
+            fill="none"
+          >
+            <path
+              id="trail-up"
+              class="trail trail-up"
+              d="M201 430 C 205 380, 197 320, 201 260"
+              stroke="var(--teal-bright)"
+              stroke-width="10"
+              stroke-linecap="round"
+            />
+            <circle class="tip tip-up" r="17" fill="var(--teal-bright)" />
+            <path
+              class="tick tick-up"
+              d="M181 218 L201 198 L221 218"
+              stroke="var(--teal-bright)"
+              stroke-width="8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              id="trail-right"
+              class="trail trail-right"
+              d="M111 330 C 161 326, 221 334, 281 330"
+              stroke="var(--teal-bright)"
+              stroke-width="10"
+              stroke-linecap="round"
+            />
+            <circle class="tip tip-right" r="17" fill="var(--teal-bright)" />
+            <path
+              class="tick tick-right"
+              d="M311 310 L331 330 L311 350"
+              stroke="var(--teal-bright)"
+              stroke-width="8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: calc(var(--space) * 10) calc(var(--space) * 12); }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: calc(var(--space) * 8);
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .hero-grid { grid-template-columns: 7fr 5fr; }
+  }
+
+  .hero-copy .ecp { margin-bottom: calc(var(--space) * 3); display: block; }
+
+  .hero-sub {
+    margin-top: calc(var(--space) * 3);
+    font-size: 20px;
+    max-width: 26em;
+  }
+
+  .hero-actions {
+    margin-top: calc(var(--space) * 5);
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space) * 2);
+    flex-wrap: wrap;
+  }
+
+  .store-note { font-size: 15px; color: var(--ink-faint); }
+
+  /* ---------- Phone ---------- */
+  .hero-device { display: flex; justify-content: center; }
+
+  .phone {
+    width: min(300px, 78vw);
+    border-radius: 48px;
+    padding: 10px;
+    background: #1a1a1e; /* device chassis, not a surface token */
+    box-shadow:
+      0 2px 6px rgb(14 20 23 / 0.18),
+      0 24px 48px -16px rgb(14 20 23 / 0.35);
+  }
+
+  .phone-screen {
+    position: relative;
+    border-radius: 38px;
+    overflow: hidden;
+    background: var(--screen);
+  }
+
+  .phone-screen img { width: 100%; height: auto; }
+
+  .swipe { position: absolute; inset: 0; }
+
+  /* ---------- The one orchestrated moment ----------
+     8s loop: swipe up (draw trail, fingertip travels, chevron ticks),
+     rest, swipe right, rest. Static (hidden) under reduced motion. */
+  .trail, .tip, .tick { opacity: 0; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .trail {
+      stroke-dasharray: 220;
+      stroke-dashoffset: 220;
+    }
+
+    .trail-up   { animation: draw 8s ease-out infinite; }
+    .tip-up     { animation: travel-up 8s ease-out infinite; }
+    .tick-up    { animation: tick 8s ease-out infinite; }
+
+    .trail-right { animation: draw 8s ease-out infinite 4s; }
+    .tip-right   { animation: travel-right 8s ease-out infinite 4s; }
+    .tick-right  { animation: tick 8s ease-out infinite 4s; }
+
+    @keyframes draw {
+      0%        { stroke-dashoffset: 220; opacity: 0; }
+      4%        { opacity: 0.9; }
+      14%       { stroke-dashoffset: 0; opacity: 0.9; }
+      26%, 100% { stroke-dashoffset: 0; opacity: 0; }
+    }
+
+    @keyframes travel-up {
+      0%        { opacity: 0; transform: translate(201px, 430px); }
+      3%        { opacity: 1; }
+      14%       { transform: translate(201px, 260px); opacity: 1; }
+      20%, 100% { transform: translate(201px, 260px); opacity: 0; }
+    }
+
+    @keyframes travel-right {
+      0%        { opacity: 0; transform: translate(111px, 330px); }
+      3%        { opacity: 1; }
+      14%       { transform: translate(281px, 330px); opacity: 1; }
+      20%, 100% { transform: translate(281px, 330px); opacity: 0; }
+    }
+
+    @keyframes tick {
+      0%, 12%   { opacity: 0; transform: translateY(6px); }
+      16%       { opacity: 1; transform: translateY(0); }
+      30%, 100% { opacity: 0; transform: translateY(0); }
+    }
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+// Beta invite form. One email field → Formspree (free tier: 50/mo, inbox is
+// the list of record — accepted, see WEBSITE.md). NOT an account system.
+---
+
+<section class="beta" id="beta">
+  <div class="container beta-inner">
+    <p class="ecp">POST /keypress/Play</p>
+    <h2>Help test Clicker</h2>
+    <p class="beta-sub">
+      The beta runs through Apple’s TestFlight in small batches. Leave your
+      email and you’ll get an invite when a spot opens — it’s used once, for
+      the invite, and nothing else.
+    </p>
+
+    <form class="beta-form" novalidate>
+      <label class="sr-only" for="beta-email">Email address</label>
+      <input
+        id="beta-email"
+        name="email"
+        type="email"
+        autocomplete="email"
+        placeholder="you@email.com"
+        required
+      />
+      <button type="submit" class="btn btn-primary">Request an invite</button>
+    </form>
+    <p class="beta-msg" role="status" aria-live="polite"></p>
+  </div>
+</section>
+
+<script>
+  // TODO(launch): create the Formspree form once the new domain exists and
+  // put its ID here, e.g. "https://formspree.io/f/abcdwxyz".
+  const FORMSPREE_ENDPOINT = "TODO_FORMSPREE_ENDPOINT";
+
+  const form = document.querySelector<HTMLFormElement>(".beta-form")!;
+  const msg = document.querySelector<HTMLParagraphElement>(".beta-msg")!;
+  const input = form.querySelector<HTMLInputElement>("input")!;
+  const btn = form.querySelector<HTMLButtonElement>("button")!;
+
+  function show(text: string, kind: "error" | "success" | "info") {
+    msg.textContent = text;
+    msg.dataset.kind = kind;
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = input.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      show("Enter a valid email address.", "error");
+      return;
+    }
+
+    if (FORMSPREE_ENDPOINT.startsWith("TODO")) {
+      show(
+        "Beta signups open when the site goes live — this local build isn’t connected yet.",
+        "info",
+      );
+      return;
+    }
+
+    btn.disabled = true;
+    const label = btn.textContent;
+    btn.textContent = "Sending…";
+
+    fetch(FORMSPREE_ENDPOINT, {
+      method: "POST",
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    })
+      .then((r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        form.reset();
+        show("Got it — watch your inbox for a TestFlight invite.", "success");
+      })
+      .catch(() => {
+        show("That didn’t send. Check your connection and try again.", "error");
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.textContent = label;
+      });
+  });
+</script>
+
+<style>
+  .beta {
+    padding-block: calc(var(--space) * 12);
+    border-top: 1px solid var(--line);
+  }
+
+  .beta-inner { max-width: 640px; text-align: center; }
+
+  .beta h2 { margin-top: calc(var(--space) * 3); }
+
+  .beta-sub {
+    margin-top: calc(var(--space) * 2.5);
+    font-size: 17px;
+  }
+
+  .beta-form {
+    margin-top: calc(var(--space) * 4);
+    display: flex;
+    gap: calc(var(--space) * 1.5);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .beta-form input {
+    flex: 1 1 260px;
+    max-width: 340px;
+    min-height: 52px;
+    padding: 0 20px;
+    font: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+  }
+
+  .beta-form input::placeholder { color: var(--ink-faint); }
+
+  .beta-form input:focus {
+    outline: 2px solid var(--teal-deep);
+    outline-offset: 0;
+    border-color: transparent;
+  }
+
+  .beta-msg {
+    margin-top: calc(var(--space) * 2);
+    font-size: 15px;
+    min-height: 1.5em;
+  }
+
+  .beta-msg[data-kind="error"] { color: var(--signal); }
+  .beta-msg[data-kind="success"] { color: var(--teal-deep); font-weight: 600; }
+  .beta-msg[data-kind="info"] { color: var(--ink-faint); }
+</style>

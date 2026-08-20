@@ -1,0 +1,97 @@
+---
+// Comparison vs "typical remote apps". Signal color appears here and in
+// form errors ONLY — it always means "the bad option".
+---
+
+<section class="compare">
+  <div class="container">
+    <p class="ecp">POST /keypress/Back</p>
+    <h2>Clicker vs. the usual remote apps</h2>
+
+    <div class="table-wrap" tabindex="0" role="region" aria-label="Feature comparison">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col"><span class="sr-only">Feature</span></th>
+            <th scope="col" class="col-us">Clicker</th>
+            <th scope="col" class="col-them">Typical remote apps</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Price</th>
+            <td class="col-us">One-time, yours forever</td>
+            <td class="col-them">Weekly subscription</td>
+          </tr>
+          <tr>
+            <th scope="row">Ads</th>
+            <td class="col-us">Never</td>
+            <td class="col-them">Banner and video ads</td>
+          </tr>
+          <tr>
+            <th scope="row">Trackers &amp; analytics</th>
+            <td class="col-us">None</td>
+            <td class="col-them">Usually several</td>
+          </tr>
+          <tr>
+            <th scope="row">Account required</th>
+            <td class="col-us">No</td>
+            <td class="col-them">Often</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="compare-note">
+      Based on common patterns across popular third-party remote apps. No
+      specific product implied.
+    </p>
+  </div>
+</section>
+
+<style>
+  .compare { padding-block: calc(var(--space) * 12); }
+
+  .compare h2 { margin-top: calc(var(--space) * 3); }
+
+  .table-wrap {
+    margin-top: calc(var(--space) * 5);
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+    font-size: 16px;
+  }
+
+  th, td {
+    text-align: left;
+    padding: calc(var(--space) * 2) calc(var(--space) * 2.5);
+    border-bottom: 1px solid var(--line);
+  }
+
+  thead th {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  tbody th { font-weight: 600; color: var(--ink); }
+
+  .col-us { color: var(--teal-deep); font-weight: 600; }
+  thead .col-us { color: var(--teal-deep); }
+
+  .col-them { color: var(--signal); }
+  thead .col-them { color: var(--signal); }
+
+  tbody tr:last-child th,
+  tbody tr:last-child td { border-bottom: none; }
+
+  .compare-note {
+    margin-top: calc(var(--space) * 3);
+    font-size: 13px;
+    color: var(--ink-faint);
+  }
+</style>

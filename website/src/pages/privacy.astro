@@ -1,0 +1,67 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="Privacy — Clicker"
+  description="Clicker’s privacy policy: the app collects nothing; this site collects only the email you choose to leave for a beta invite."
+>
+  <article class="container prose">
+    <p class="ecp">GET /privacy</p>
+    <h1>Privacy</h1>
+    <p class="updated">Last updated: August 19, 2026</p>
+
+    <h2>The app</h2>
+    <p>
+      Clicker collects nothing. The app talks directly to your Roku over your
+      local Wi-Fi network and nowhere else. There are no accounts, no
+      analytics, no trackers, no ads, and no servers of ours involved —
+      commands go from your phone to your Roku, and that’s the whole story.
+    </p>
+
+    <h2>This website</h2>
+    <p>
+      This site sets no cookies and runs no analytics or trackers. It collects
+      exactly one thing, and only if you choose to give it: the email address
+      you enter in the beta form.
+    </p>
+    <p>
+      That address is submitted through
+      <a href="https://formspree.io" rel="noopener">Formspree</a>, a
+      third-party form service, and delivered to our inbox. We use it solely
+      to send you a TestFlight beta invite. We never sell it, share it, or add
+      it to a mailing list, and we’ll delete it on request.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      <!-- TODO(domain): publish a contact address once the new domain and
+           its email exist. -->
+      A contact address will be published here when the site goes live.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .prose {
+    max-width: 680px;
+    padding-block: calc(var(--space) * 10);
+  }
+
+  .prose h1 { margin-top: calc(var(--space) * 3); }
+
+  .prose .updated {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin-top: var(--space);
+  }
+
+  .prose h2 {
+    font-size: 24px;
+    margin-top: calc(var(--space) * 5);
+    margin-bottom: calc(var(--space) * 1.5);
+  }
+
+  .prose p + p { margin-top: calc(var(--space) * 2); }
+</style>

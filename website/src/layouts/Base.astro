@@ -1,0 +1,120 @@
+---
+// Shared page shell: head, nav, footer. Local-only site — no analytics,
+// no trackers, no cookies, no CDNs (fonts are self-hosted via Fontsource).
+import "@fontsource-variable/archivo/wdth.css";
+import "@fontsource-variable/public-sans";
+import "@fontsource-variable/jetbrains-mono";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#F2F2F7" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="container nav-row">
+        <a href="/" class="wordmark" aria-label="Clicker home">
+          clicker<span class="wordmark-cursor" aria-hidden="true">_</span>
+        </a>
+        <span class="ecp nav-tag" aria-hidden="true">remote for Roku</span>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/">Home</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/terms">Terms</a>
+        </nav>
+        <p class="footer-line">© {new Date().getFullYear()} Clicker. Built independently.</p>
+        <p class="footer-line footer-disclaimer">
+          Not affiliated with or endorsed by Roku, Inc. Roku is a trademark of Roku, Inc.
+        </p>
+        <p class="footer-line footer-decode">
+          <span class="ecp">▸</span> Section labels are real Roku ECP commands — the
+          openly documented API Clicker speaks to your Roku.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    height: 60px;
+    align-items: center;
+  }
+
+  .wordmark {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .wordmark-cursor { color: var(--teal); }
+
+  .nav-tag { color: var(--ink-faint); }
+  .nav-tag::before { content: none; }
+
+  .footer {
+    border-top: 1px solid var(--line);
+    padding-block: calc(var(--space) * 6);
+    margin-top: calc(var(--space) * 4);
+  }
+
+  .footer-nav {
+    display: flex;
+    gap: calc(var(--space) * 3);
+    margin-bottom: calc(var(--space) * 2);
+  }
+
+  .footer-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 15px;
+  }
+
+  .footer-nav a:hover { color: var(--ink); text-decoration: underline; }
+
+  .footer-line {
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin-top: calc(var(--space) * 0.5);
+  }
+
+  .footer-decode { margin-top: calc(var(--space) * 2); }
+</style>

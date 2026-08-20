@@ -1,0 +1,103 @@
+---
+// Five questions, native <details> — keyboard-accessible for free.
+---
+
+<section class="faq">
+  <div class="container faq-inner">
+    <p class="ecp">GET /query/apps</p>
+    <h2>Questions, answered</h2>
+
+    <details>
+      <summary>Does it work with every Roku?</summary>
+      <p>
+        Any Roku device on your Wi-Fi — streaming sticks, boxes, and Roku TVs.
+        Volume and power controls appear automatically when your device is a
+        Roku TV.
+      </p>
+    </details>
+
+    <details>
+      <summary>What happens after the 7 days?</summary>
+      <p>
+        The trial ends and Clicker asks you to buy it — once. Pay one price
+        and it’s yours forever, updates included. If you don’t, it stops
+        working; no charge ever sneaks through.
+      </p>
+    </details>
+
+    <details>
+      <summary>Do my phone and Roku need the same Wi-Fi?</summary>
+      <p>
+        Yes. Clicker talks directly to your Roku over your local network —
+        that’s what makes it fast and private. It can’t control a Roku over
+        the internet, by design.
+      </p>
+    </details>
+
+    <details>
+      <summary>Does it need an account or internet?</summary>
+      <p>
+        No account, ever. And no internet — just your Wi-Fi. The email you
+        leave on this site is only for a beta invite; the app itself never
+        asks for anything.
+      </p>
+    </details>
+
+    <details>
+      <summary>How does the beta work?</summary>
+      <p>
+        Leave your email above. Invites go out through Apple’s TestFlight in
+        small batches; when a spot opens you’ll get a link to install the
+        beta free.
+      </p>
+    </details>
+  </div>
+</section>
+
+<style>
+  .faq { padding-block: calc(var(--space) * 4) calc(var(--space) * 12); }
+
+  .faq-inner { max-width: 720px; }
+
+  .faq h2 {
+    margin-top: calc(var(--space) * 3);
+    margin-bottom: calc(var(--space) * 5);
+  }
+
+  details {
+    border-bottom: 1px solid var(--line);
+    padding-block: calc(var(--space) * 2.5);
+  }
+
+  details:first-of-type { border-top: 1px solid var(--line); }
+
+  summary {
+    font-family: var(--font-display);
+    font-stretch: 108%;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: calc(var(--space) * 2);
+  }
+
+  summary::-webkit-details-marker { display: none; }
+
+  summary::after {
+    content: "+";
+    font-family: var(--font-mono);
+    font-size: 20px;
+    color: var(--teal-deep);
+    flex-shrink: 0;
+  }
+
+  details[open] summary::after { content: "–"; }
+
+  details p {
+    margin-top: calc(var(--space) * 1.5);
+    max-width: 56ch;
+  }
+</style>
