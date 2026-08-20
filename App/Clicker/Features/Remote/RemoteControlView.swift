@@ -208,6 +208,13 @@ private struct SwipeSurface: View {
     @State private var activeTrail: [CGPoint] = []
     @State private var fadingTrails: [Trail] = []
     @State private var selectPulse = false
+    /// Which direction is currently lit (chevron + that wall of the border).
+    /// Cleared by the newest swipe's own fade, so rapid swipes never leave a
+    /// stale glow behind.
+    @State private var litDirection: SwipeDirection?
+    @State private var litToken = 0
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private let tapThreshold: CGFloat = 20
     private let dominanceRatio: CGFloat = 1.2
@@ -224,6 +231,9 @@ private struct SwipeSurface: View {
                 )
             RoundedRectangle(cornerRadius: 28)
                 .strokeBorder(Color.white.opacity(0.06), lineWidth: 1)
+
+            // The wall the finger swiped toward, lit and fading back down.
+            edgeGlow
 
             // Faint affordances — visible if you glance, ignorable if you don't.
             directionHints
@@ -318,6 +328,7 @@ private struct SwipeSurface: View {
     private func fire(_ direction: SwipeDirection?, repeats: Int = 1) {
         if let direction {
             onSwipe(direction, repeats)
+            light(direction)
         } else {
             onSelect()
             withAnimation(.interactiveSpring(response: 0.15, dampingFraction: 0.7)) { selectPulse = true }
@@ -328,22 +339,63 @@ private struct SwipeSurface: View {
         }
     }
 
+    /// Snaps the highlight on, then fades it out. Each call takes ownership via
+    /// a token so an interrupting swipe's fade can't cancel the newer glow.
+    private func light(_ direction: SwipeDirection) {
+        litToken += 1
+        let token = litToken
+        withAnimation(.easeOut(duration: 0.06)) { litDirection = direction }
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 140_000_000)
+            guard token == litToken else { return }
+            withAnimation(.easeOut(duration: 0.35)) { litDirection = nil }
+        }
+    }
+
+    /// Lights only the swiped wall: the accent is strongest at that edge and
+    /// falls off to nothing by the centre, so the border reads as directional
+    /// rather than as a full outline.
+    @ViewBuilder private var edgeGlow: some View {
+        if let litDirection {
+            RoundedRectangle(cornerRadius: 28)
+                .strokeBorder(
+                    LinearGradient(colors: [Theme.accent, Theme.accent.opacity(0)],
+                                   startPoint: litDirection.unitPoint,
+                                   endPoint: .center),
+                    lineWidth: 3
+                )
+                .shadow(color: Theme.accent.opacity(0.5), radius: 10)
+                .allowsHitTesting(false)
+                .transition(.opacity)
+        }
+    }
+
     private var directionHints: some View {
         VStack {
-            Image(systemName: "chevron.up")
+            hint(.up, "chevron.up")
             Spacer()
             HStack {
-                Image(systemName: "chevron.left")
+                hint(.left, "chevron.left")
                 Spacer()
-                Image(systemName: "chevron.right")
+                hint(.right, "chevron.right")
             }
             Spacer()
-            Image(systemName: "chevron.down")
+            hint(.down, "chevron.down")
         }
         .font(.body.weight(.semibold))
-        .foregroundStyle(Color.white.opacity(0.18))
         .padding(18)
         .allowsHitTesting(false)
+    }
+
+    /// Resting chevrons stay barely-there; the swiped one takes the accent and
+    /// a matching glow. The nudge outward is motion, so it is dropped under
+    /// Reduce Motion — the colour change alone still carries the feedback.
+    private func hint(_ direction: SwipeDirection, _ symbol: String) -> some View {
+        let isLit = litDirection == direction
+        return Image(systemName: symbol)
+            .foregroundStyle(isLit ? Theme.accent : Color.white.opacity(0.18))
+            .shadow(color: isLit ? Theme.accent.opacity(0.9) : .clear, radius: 8)
+            .scaleEffect(isLit && !reduceMotion ? 1.3 : 1)
     }
 }
 
@@ -401,6 +453,16 @@ private struct FadingTrailView: View {
 
 private enum SwipeDirection: Equatable {
     case up, down, left, right
+
+    /// Where this direction's wall sits, for anchoring the edge-glow gradient.
+    var unitPoint: UnitPoint {
+        switch self {
+        case .up: return .top
+        case .down: return .bottom
+        case .left: return .leading
+        case .right: return .trailing
+        }
+    }
 
     var key: ECPKey {
         switch self {
