@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B3019E864D58B662F403FD1 /* DPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D05F4ED738B2A673306477 /* DPadView.swift */; };
 		27199C4848B9DFE740480B72 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761BD3F1873C5FBDC55A8300 /* ContentView.swift */; };
 		27D45A513D64FB3402F7F63D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4395F262863AB9132E7CAC /* SettingsView.swift */; };
 		42FCE0819CEAA363860A5FC0 /* ManualIPSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABFF23FECD77FFDC14C8F37 /* ManualIPSheet.swift */; };
@@ -49,7 +48,6 @@
 		761BD3F1873C5FBDC55A8300 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7CF386EA66BF0568970AC3BB /* StatusPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusPill.swift; sourceTree = "<group>"; };
 		85E323900EBDD52182BA686B /* ClickerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickerApp.swift; sourceTree = "<group>"; };
-		87D05F4ED738B2A673306477 /* DPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPadView.swift; sourceTree = "<group>"; };
 		8A9EA07AFC315837454B24A9 /* KeyboardSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSheet.swift; sourceTree = "<group>"; };
 		9F988BF6FAB3CC9A596F72DD /* RemoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteView.swift; sourceTree = "<group>"; };
 		AF5D91DEE986DAE223D62E8F /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
@@ -117,7 +115,6 @@
 			isa = PBXGroup;
 			children = (
 				D8B2440744E325B10EE4ED62 /* .gitkeep */,
-				87D05F4ED738B2A673306477 /* DPadView.swift */,
 				4300AF76AB991E1FE71694B5 /* HoldKeyButton.swift */,
 				05B06DB171C260BA416AA7D9 /* RemoteControlView.swift */,
 				9F988BF6FAB3CC9A596F72DD /* RemoteView.swift */,
@@ -290,7 +287,6 @@
 				A996EFB6E4EB1747FE40DCE9 /* ChannelGridView.swift in Sources */,
 				9CCC4F18CBDC91FEE0752535 /* ClickerApp.swift in Sources */,
 				27199C4848B9DFE740480B72 /* ContentView.swift in Sources */,
-				0B3019E864D58B662F403FD1 /* DPadView.swift in Sources */,
 				6FC30772C9B0EBA690ECC88B /* DiscoveryView.swift in Sources */,
 				DA6F6B8C676F2E0271011B63 /* Haptics.swift in Sources */,
 				9FD270335D559025095CEE12 /* HelpView.swift in Sources */,
