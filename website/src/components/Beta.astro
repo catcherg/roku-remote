@@ -23,7 +23,17 @@
         placeholder="you@email.com"
         required
       />
-      <button type="submit" class="btn btn-primary">Request an invite</button>
+      <!-- Honeypot: bots fill it, people never see it. Formspree discards
+           any submission where _gotcha is non-empty. -->
+      <input
+        type="text"
+        name="_gotcha"
+        class="gotcha"
+        tabindex="-1"
+        autocomplete="off"
+        aria-hidden="true"
+      />
+      <button type="submit" class="btn btn-primary">Get a beta invite</button>
     </form>
     <p class="beta-msg" role="status" aria-live="polite"></p>
   </div>
@@ -35,6 +45,7 @@
   const FORMSPREE_ENDPOINT = "TODO_FORMSPREE_ENDPOINT";
 
   const form = document.querySelector<HTMLFormElement>(".beta-form")!;
+  const gotcha = form.querySelector<HTMLInputElement>("[name=_gotcha]")!;
   const msg = document.querySelector<HTMLParagraphElement>(".beta-msg")!;
   const input = form.querySelector<HTMLInputElement>("input")!;
   const btn = form.querySelector<HTMLButtonElement>("button")!;
@@ -46,6 +57,12 @@
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+    // A filled honeypot means a bot: pretend success, send nothing.
+    if (gotcha.value) {
+      show("Got it — watch your inbox for a TestFlight invite.", "success");
+      return;
+    }
+
     const email = input.value.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       show("Enter a valid email address.", "error");
@@ -67,7 +84,7 @@
     fetch(FORMSPREE_ENDPOINT, {
       method: "POST",
       headers: { Accept: "application/json", "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, _gotcha: gotcha.value }),
     })
       .then((r) => {
         if (!r.ok) throw new Error(String(r.status));
@@ -121,6 +138,10 @@
   }
 
   .beta-form input::placeholder { color: var(--ink-faint); }
+
+  /* display:none is Formspree's documented honeypot treatment; it also
+     wins against the .beta-form input sizing rules above. */
+  .beta-form .gotcha { display: none !important; }
 
   .beta-form input:focus {
     outline: 2px solid var(--teal-deep);

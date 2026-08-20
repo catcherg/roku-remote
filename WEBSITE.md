@@ -125,6 +125,29 @@ build re-derives every variant. Note the swipe overlay in `Hero.astro` is
 positioned against a `402x874` viewBox; re-aim it if the capture device
 changes.
 
+## Round-3 decisions (implementation grilling)
+
+- **One action, one name**: the beta CTA is "Get a beta invite" everywhere —
+  nav, hero, and the form's submit button. Never rename it mid-flow.
+- **Eyebrow rule**: index-page eyebrows are REAL ECP commands only (the footer
+  claims as much, so it must stay literally true). Non-product pages
+  (privacy, terms, 404) use plain mono labels with no HTTP-verb fiction.
+- **Favicon = the app icon's mark**: simplified D-pad ring (grey arrows, teal
+  OK dot on near-black), redrawn as SVG. One brand mark, everywhere.
+- **Wordmark split is deliberate**: `clicker_` (lowercase mono, teal cursor)
+  is the logotype; "Clicker" (capitalized) is the name in all prose. Keep both.
+- **Values kicker**: "no server to rent, no data to sell" line ties all three
+  cards to the heading's question.
+- **404 page** exists (`404.astro`); **honeypot** (`_gotcha`) is in the beta
+  form — bots get a fake success and nothing is sent.
+- **Hero recapture checklist** (after the Search-pill-wrap app fix lands):
+  1. rebuild app, relaunch in simulator (iPhone 17 Pro, dark)
+  2. `xcrun simctl status_bar <udid> override --time "9:41" --batteryState charged --batteryLevel 100 --wifiBars 3`
+  3. connect to the Roku, capture remote + channels via `simctl io screenshot`
+  4. `sips --resampleWidth 804`, overwrite `src/assets/*.png`
+  5. `xcrun simctl status_bar <udid> clear`
+  Do NOT rename the user's Roku for captures (decided Q4, round 3).
+
 ## Round-2 decisions (UI tweak pass)
 
 Settled in a second grilling session after the first build:
@@ -152,3 +175,5 @@ Settled in a second grilling session after the first build:
       asset, wire the Formspree endpoint
 - [ ] At deploy: `og:image` (1200x630 share card), `og:url`, PNG favicon
       fallback, `robots.txt`
+- [ ] Recapture hero + channels screenshots once the app's quick-action
+      pill-wrap fix lands (checklist in Round-3 decisions above)

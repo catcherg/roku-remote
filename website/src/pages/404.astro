@@ -1,0 +1,37 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="Not found — Clicker"
+  description="This page doesn’t exist."
+>
+  <div class="container notfound">
+    <p class="ecp">404</p>
+    <h1>Nothing on this channel.</h1>
+    <p class="notfound-sub">
+      The page you tuned to doesn’t exist — it may have moved, or the link
+      is wrong.
+    </p>
+    <a href="/" class="btn btn-primary">Back to the remote</a>
+  </div>
+</Base>
+
+<style>
+  .notfound {
+    max-width: 640px;
+    padding-block: calc(var(--space) * 14);
+  }
+
+  .notfound h1 { margin-top: calc(var(--space) * 3); }
+
+  .notfound-sub {
+    margin-top: calc(var(--space) * 2.5);
+    font-size: 18px;
+  }
+
+  .notfound .btn {
+    margin-top: calc(var(--space) * 4);
+    text-decoration: none;
+  }
+</style>
