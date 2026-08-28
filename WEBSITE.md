@@ -7,17 +7,28 @@ re-litigate them.
 
 ## What it is
 
-A **local-only** marketing and beta-recruitment site for Clicker. No accounts,
-no database, no waitlist system, no deploy, no analytics. The old domain
-(getclicker.me) is dead; a new domain is not yet chosen. Run with
-`npm run dev` in `website/`.
+A marketing and beta-recruitment site for Clicker, **live at
+https://getclicker.me**. No accounts, no database, no waitlist system, no
+analytics. Run locally with `npm run dev --prefix website`.
+
+> **Domain status (updated 2026-08-27):** getclicker.me was previously
+> retired and the site was built local-only. It has been brought back
+> **temporarily** while a permanent domain is chosen. The domain appears in
+> code in exactly three places — `site` in `astro.config.mjs`,
+> `public/CNAME`, and the `Sitemap:` line in `public/robots.txt`. Everything
+> else (canonical tags, OpenGraph URLs, sitemap entries) derives from `site`.
+> Moving domains means editing those three, plus
+> `AppInfo.privacyPolicyURL` in `Theme.swift`.
 
 ## Stack
 
 - **Astro**, static output. Vanilla — no React/Vue islands unless a component
   genuinely needs client JS (the beta form and swipe animation are plain
   `<script>`).
-- Three pages: `index`, `privacy`, `terms`.
+- Four pages: `index`, `privacy`, `terms`, `404`.
+- Deployed to **GitHub Pages** via `.github/workflows/deploy-website.yml` on
+  pushes to `main` touching `website/**`. `@astrojs/sitemap` generates
+  `sitemap-index.xml`.
 - Fonts self-hosted (latin subset, see Type below). **No CDNs, no trackers, no cookies.**
 
 ## Design (from the frontend-design skill's two-pass process)
@@ -166,14 +177,20 @@ Settled in a second grilling session after the first build:
 ## Open items / blockers carried forward
 
 - [ ] Formspree form ID (needs new domain) — swap the TODO constant
-- [ ] New domain + published contact email
+- [ ] Permanent domain decision (getclicker.me is a temporary revival)
+- [ ] Published contact email on privacy + terms
 - [ ] Live privacy-policy URL is an App Store submission blocker;
       `Theme.swift → AppInfo.privacyPolicyURL` still points at example.com
 - [ ] App must implement the trial: free download + $4.99 one-time IAP
       (StoreKit work, not website scope)
 - [ ] At launch: swap the App Store status chip for Apple's official badge
       asset, wire the Formspree endpoint
-- [ ] At deploy: `og:image` (1200x630 share card), `og:url`, PNG favicon
-      fallback, `robots.txt`
+- [x] ~~`og:image`, `og:url`, canonical, `robots.txt`, sitemap~~ — done
+      2026-08-27; share card is `public/og-image.png`, regenerate by
+      rendering the card markup at 1200x630 in headless Chrome
+- [ ] PNG favicon fallback for older crawlers (SVG favicon is in place)
+- [ ] One-time repo setup: Settings → Pages → Source: GitHub Actions,
+      custom domain getclicker.me, Enforce HTTPS once the cert provisions
+- [ ] DNS at the registrar: apex A records to GitHub Pages, or ALIAS/ANAME
 - [ ] Recapture hero + channels screenshots once the app's quick-action
       pill-wrap fix lands (checklist in Round-3 decisions above)
