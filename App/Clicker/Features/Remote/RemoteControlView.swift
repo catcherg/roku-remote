@@ -115,6 +115,10 @@ struct RemoteControlView: View {
             }
         }
         .animation(.easeInOut(duration: 0.25), value: app.isReconnecting)
+        // Quiet "N days left" line during the trial; nothing once unlocked.
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            TrialMarker()
+        }
         .sheet(isPresented: $showKeyboard) {
             KeyboardSheet()
                 .presentationDetents([.height(220)])
@@ -537,4 +541,5 @@ private struct GridKeyStyle: ButtonStyle {
         RemoteControlView()
     }
     .environmentObject(AppState())
+    .environmentObject(EntitlementStore.preview())
 }

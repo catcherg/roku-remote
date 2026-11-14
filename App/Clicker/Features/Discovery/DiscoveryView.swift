@@ -75,6 +75,9 @@ struct DiscoveryView: View {
                 .accessibilityLabel("Settings")
             }
         }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            TrialMarker()
+        }
         .refreshable {
             app.startScan()
         }

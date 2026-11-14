@@ -27,7 +27,28 @@
 		F79825D6CB6700AFFB8D7652 /* StatusPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF386EA66BF0568970AC3BB /* StatusPill.swift */; };
 		FE4844203BC8BDAB5851E0AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA201205D27215063FF81850 /* Assets.xcassets */; };
 		FF02B84A5A129D7B83E56C69 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CFFFA2611CC2AC9E399766 /* AppState.swift */; };
+		4B12D400844629668E67CC12 /* DebugPurchaseBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FC6A9D0023B6FDFEB3D01B /* DebugPurchaseBackend.swift */; };
+		A9FAE38CA0D5A35FFA041B50 /* Entitlement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69597ACC99143D2607AD3367 /* Entitlement.swift */; };
+		04A023DA825F0EEDC793B733 /* EntitlementStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080FEEB1328800FFEDB7560 /* EntitlementStore.swift */; };
+		08EB477A4B61D45762D60F9F /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7867F731862355A71B097A12 /* PaywallView.swift */; };
+		EE670DC3142CFF459C06B935 /* PurchaseBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2756DC83B9D2D1226EB5B10 /* PurchaseBackend.swift */; };
+		9FD0277D3166C153F3B74481 /* TrialOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D8D3C656CE9D584B95E538 /* TrialOfferView.swift */; };
+		2B97BE597ACB28E0CC7B323E /* EntitlementStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402FDEAFAA3BDF51833D16AB /* EntitlementStoreTests.swift */; };
+		390600A3D1B211537423D33A /* FakeAppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511C9E64FCFA1CCE0302E78 /* FakeAppStore.swift */; };
+		E8EA707B4809666399ECFB43 /* StoreKitIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237D739F6D13B15D28FAE8D1 /* StoreKitIntegrationTests.swift */; };
+		C0096694439EA38817369C62 /* TrialPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026B7A464654ED7526E24AEA /* TrialPolicyTests.swift */; };
+		81CD16DACE0A2BC4576D2129 /* Clicker.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 658542C56B58624E41F5663E /* Clicker.storekit */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BE212B17B2C8F43733A51391 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 17EDD9E4BD2DCA9112B6AD8F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 64583103401C2FABDEA84798;
+			remoteInfo = Clicker;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		02088F4CAF012AAE25985B24 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
@@ -59,6 +80,18 @@
 		D8B2440744E325B10EE4ED62 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		DB7224CFD9BE04B98CD24B2B /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		F91BAB31105558DD432AEE71 /* RokuKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RokuKit; path = ../RokuKit; sourceTree = SOURCE_ROOT; };
+		D4FC6A9D0023B6FDFEB3D01B /* DebugPurchaseBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugPurchaseBackend.swift; sourceTree = "<group>"; };
+		69597ACC99143D2607AD3367 /* Entitlement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entitlement.swift; sourceTree = "<group>"; };
+		A080FEEB1328800FFEDB7560 /* EntitlementStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntitlementStore.swift; sourceTree = "<group>"; };
+		7867F731862355A71B097A12 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		C2756DC83B9D2D1226EB5B10 /* PurchaseBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseBackend.swift; sourceTree = "<group>"; };
+		B3D8D3C656CE9D584B95E538 /* TrialOfferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrialOfferView.swift; sourceTree = "<group>"; };
+		402FDEAFAA3BDF51833D16AB /* EntitlementStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntitlementStoreTests.swift; sourceTree = "<group>"; };
+		4511C9E64FCFA1CCE0302E78 /* FakeAppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeAppStore.swift; sourceTree = "<group>"; };
+		237D739F6D13B15D28FAE8D1 /* StoreKitIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitIntegrationTests.swift; sourceTree = "<group>"; };
+		026B7A464654ED7526E24AEA /* TrialPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrialPolicyTests.swift; sourceTree = "<group>"; };
+		658542C56B58624E41F5663E /* Clicker.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Clicker.storekit; sourceTree = "<group>"; };
+		29B273D76BF642CC6B2D5F53 /* ClickerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClickerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +168,8 @@
 			isa = PBXGroup;
 			children = (
 				7B009DCCB8AE058797989E3E /* Clicker */,
+				5B75FFF755571203D99A3639 /* ClickerTests */,
+				1C12956C5808313D559B5492 /* Support */,
 				0D588D67A3C76808D7E9B559 /* Packages */,
 				9154E8D3C70C48FD7A00B3A8 /* Products */,
 			);
@@ -165,6 +200,7 @@
 			isa = PBXGroup;
 			children = (
 				3CC265C9F4D074DF9BF504AD /* Clicker.app */,
+				29B273D76BF642CC6B2D5F53 /* ClickerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -196,6 +232,7 @@
 				AD2AE6396EC06349FD61517D /* Help */,
 				6A48F37E19181E567D468FA6 /* Keyboard */,
 				319D3F6D8762C6CDC66424DC /* Onboarding */,
+				F6C6DAA57D0DCCA46312AB80 /* Purchase */,
 				472A2E68ECD077A0FDA1B34B /* Remote */,
 				0162B453653B520543A10B10 /* Settings */,
 			);
@@ -210,6 +247,38 @@
 				761BD3F1873C5FBDC55A8300 /* ContentView.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		F6C6DAA57D0DCCA46312AB80 /* Purchase */ = {
+			isa = PBXGroup;
+			children = (
+				D4FC6A9D0023B6FDFEB3D01B /* DebugPurchaseBackend.swift */,
+				69597ACC99143D2607AD3367 /* Entitlement.swift */,
+				A080FEEB1328800FFEDB7560 /* EntitlementStore.swift */,
+				7867F731862355A71B097A12 /* PaywallView.swift */,
+				C2756DC83B9D2D1226EB5B10 /* PurchaseBackend.swift */,
+				B3D8D3C656CE9D584B95E538 /* TrialOfferView.swift */,
+			);
+			path = Purchase;
+			sourceTree = "<group>";
+		};
+		5B75FFF755571203D99A3639 /* ClickerTests */ = {
+			isa = PBXGroup;
+			children = (
+				402FDEAFAA3BDF51833D16AB /* EntitlementStoreTests.swift */,
+				4511C9E64FCFA1CCE0302E78 /* FakeAppStore.swift */,
+				237D739F6D13B15D28FAE8D1 /* StoreKitIntegrationTests.swift */,
+				026B7A464654ED7526E24AEA /* TrialPolicyTests.swift */,
+			);
+			path = ClickerTests;
+			sourceTree = "<group>";
+		};
+		1C12956C5808313D559B5492 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				658542C56B58624E41F5663E /* Clicker.storekit */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -235,6 +304,25 @@
 			productReference = 3CC265C9F4D074DF9BF504AD /* Clicker.app */;
 			productType = "com.apple.product-type.application";
 		};
+		F328FD31E1C087E3845A1B73 /* ClickerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C6DC6512A6C82E891D63E7D5 /* Build configuration list for PBXNativeTarget "ClickerTests" */;
+			buildPhases = (
+				26385BEADE025CE0F1081B45 /* Sources */,
+				207B207CB219F8B5D2811C3F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				243EDF2E4DA278AD9E65C18A /* PBXTargetDependency */,
+			);
+			name = ClickerTests;
+			packageProductDependencies = (
+			);
+			productName = ClickerTests;
+			productReference = 29B273D76BF642CC6B2D5F53 /* ClickerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -243,6 +331,11 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					F328FD31E1C087E3845A1B73 = {
+						TestTargetID = 64583103401C2FABDEA84798;
+					};
+				};
 			};
 			buildConfigurationList = F8657E3A8FAFAC745F72D5C1 /* Build configuration list for PBXProject "Clicker" */;
 			developmentRegion = en;
@@ -262,6 +355,7 @@
 			projectRoot = "";
 			targets = (
 				64583103401C2FABDEA84798 /* Clicker */,
+				F328FD31E1C087E3845A1B73 /* ClickerTests */,
 			);
 		};
 /* End PBXProject section */
@@ -272,6 +366,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE4844203BC8BDAB5851E0AC /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		207B207CB219F8B5D2811C3F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81CD16DACE0A2BC4576D2129 /* Clicker.storekit in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,10 +402,35 @@
 				27D45A513D64FB3402F7F63D /* SettingsView.swift in Sources */,
 				F79825D6CB6700AFFB8D7652 /* StatusPill.swift in Sources */,
 				D98B77ECE974FA4551A463CC /* Theme.swift in Sources */,
+				4B12D400844629668E67CC12 /* DebugPurchaseBackend.swift in Sources */,
+				A9FAE38CA0D5A35FFA041B50 /* Entitlement.swift in Sources */,
+				04A023DA825F0EEDC793B733 /* EntitlementStore.swift in Sources */,
+				08EB477A4B61D45762D60F9F /* PaywallView.swift in Sources */,
+				EE670DC3142CFF459C06B935 /* PurchaseBackend.swift in Sources */,
+				9FD0277D3166C153F3B74481 /* TrialOfferView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		26385BEADE025CE0F1081B45 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B97BE597ACB28E0CC7B323E /* EntitlementStoreTests.swift in Sources */,
+				390600A3D1B211537423D33A /* FakeAppStore.swift in Sources */,
+				E8EA707B4809666399ECFB43 /* StoreKitIntegrationTests.swift in Sources */,
+				C0096694439EA38817369C62 /* TrialPolicyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		243EDF2E4DA278AD9E65C18A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 64583103401C2FABDEA84798 /* Clicker */;
+			targetProxy = BE212B17B2C8F43733A51391 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1CD769812A824C09E7E72BE8 /* Release */ = {
@@ -467,6 +594,46 @@
 			};
 			name = Debug;
 		};
+		3BE3EA6911BBF30E0067B116 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = YZSL25MTN9;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.catchergriffin.clicker.tests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.10;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Clicker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Clicker";
+			};
+			name = Debug;
+		};
+		8E8145828D741CA2564FF400 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = YZSL25MTN9;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.catchergriffin.clicker.tests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.10;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Clicker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Clicker";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -484,6 +651,15 @@
 			buildConfigurations = (
 				EEBD9E0B44EDFF411A590A11 /* Debug */,
 				A8CB4C28FF171819FA1294D9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C6DC6512A6C82E891D63E7D5 /* Build configuration list for PBXNativeTarget "ClickerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3BE3EA6911BBF30E0067B116 /* Debug */,
+				8E8145828D741CA2564FF400 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
