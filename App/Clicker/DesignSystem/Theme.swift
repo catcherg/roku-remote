@@ -48,8 +48,9 @@ enum Theme {
 /// App-wide constants used by Settings/About.
 enum AppInfo {
     static let disclaimer = "Not affiliated with or endorsed by Roku, Inc. Roku is a trademark of Roku, Inc."
-    // TODO: point at the registered domain's privacy page before App Store submission.
-    static let privacyPolicyURL = URL(string: "https://example.com/privacy.html")!
+    static let privacyPolicyURL = URL(string: "https://getclicker.me/privacy")!
+    /// Terms of Use, linked from the paywall beside the privacy policy.
+    static let termsURL = URL(string: "https://getclicker.me/terms")!
 
     static var version: String {
         let short = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"

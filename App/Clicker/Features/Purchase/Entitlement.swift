@@ -1,74 +1,99 @@
 import Foundation
 
-/// The two in-app purchases behind Clicker's paid path. Both are
-/// non-consumables — the pattern App Review Guideline 3.1.1 names for a
-/// non-subscription trial: a $0 "XX-day Trial" item plus a paid full unlock.
-/// The identifiers must match App Store Connect and Support/Clicker.storekit.
+/// The two in-app purchases behind Clicker's paid path: a weekly
+/// auto-renewable subscription (with a free trial as its introductory offer)
+/// and a one-time lifetime unlock. The identifiers must match App Store
+/// Connect and Support/Clicker.storekit.
 enum PurchaseProduct: String, CaseIterable, Sendable {
-    case trial = "com.catchergriffin.clicker.trial"
-    case unlock = "com.catchergriffin.clicker.unlock"
+    case weekly = "com.catchergriffin.clicker.weekly"
+    case lifetime = "com.catchergriffin.clicker.unlock"
 }
 
-/// What the App Store says this Apple Account owns. Built only from StoreKit
-/// transactions, never from anything saved on the device.
+/// How much of the remote can be used before the paywall appears.
+enum FreePreview {
+    /// Key presses the Roku has accepted before a plan is needed. Long enough
+    /// that nobody is asked to pay before seeing their TV respond.
+    static let keyPressAllowance = 10
+}
+
+/// The weekly subscription as StoreKit reports it, reduced to plain values.
+struct SubscriptionRecord: Equatable, Sendable {
+    enum State: Equatable, Sendable {
+        /// Paid up (or inside the free trial).
+        case subscribed
+        /// A renewal failed; Apple is still giving the customer time to fix it.
+        case inGracePeriod
+        /// A renewal failed and Apple is retrying the charge.
+        case inBillingRetry
+        /// Ended: cancelled, or billing never recovered.
+        case expired
+        /// Refunded, or taken away by Family Sharing.
+        case revoked
+    }
+
+    var state: State
+    /// True while the current period is the free introductory trial.
+    var isInFreeTrial = false
+    /// End of the period paid for so far: the next renewal date when it will
+    /// renew, the last day of access when it will not.
+    var currentPeriodEnds: Date?
+    /// False once the customer has cancelled.
+    var willAutoRenew = true
+
+    /// Whether this subscription unlocks the app right now. Grace period and
+    /// billing retry count: a failed card should not switch the remote off.
+    var isActive: Bool {
+        switch state {
+        case .subscribed, .inGracePeriod, .inBillingRetry: return true
+        case .expired, .revoked: return false
+        }
+    }
+
+    /// True when a renewal failed and the customer needs to fix their payment.
+    var hasBillingIssue: Bool {
+        state == .inGracePeriod || state == .inBillingRetry
+    }
+}
+
+/// What the App Store says this Apple Account owns. Built only from StoreKit,
+/// never from anything saved on the device.
 struct OwnedPurchases: Equatable, Sendable {
-    /// Purchase date of the $0 trial transaction, or nil if never started.
-    var trialStartedAt: Date?
-    /// True when the full unlock is owned (bought here or Family Shared).
-    var isUnlocked = false
+    /// True when the lifetime unlock is owned (bought here or Family Shared).
+    var ownsLifetime = false
+    /// The weekly subscription's latest standing, if there ever was one.
+    var subscription: SubscriptionRecord?
 }
 
 /// What the app is allowed to do right now. Drives all purchase UI.
 enum Access: Equatable, Sendable {
     /// StoreKit has not answered yet (first moments after launch).
     case loading
-    /// No trial transaction and no unlock: the trial has to be started first.
-    case needsTrial
-    /// Trial running. `daysRemaining` is rounded up, so it is never 0.
-    case trial(daysRemaining: Int)
-    /// Trial over, not unlocked: the remote is blocked behind the paywall.
-    case expired
-    /// Full unlock owned. Forever.
-    case unlocked
+    /// Nothing owned: the remote works until the free key presses run out.
+    /// `lapsed` is true when a subscription existed and has ended.
+    case notEntitled(lapsed: Bool)
+    /// Weekly subscription active: free trial, paid, or riding out a billing
+    /// problem.
+    case subscribed(SubscriptionRecord)
+    /// Lifetime unlock owned. Forever.
+    case lifetime
 
-    /// Whether the remote and the other feature screens may be used.
-    var allowsRemote: Bool {
+    /// Whether the remote may be used without limit.
+    var isUnlocked: Bool {
         switch self {
-        case .trial, .unlocked: return true
-        case .loading, .needsTrial, .expired: return false
+        case .subscribed, .lifetime: return true
+        case .loading, .notEntitled: return false
         }
     }
 }
 
-/// The trial rules, as pure functions of "what is owned" and "what time is it".
-enum TrialPolicy {
-    static let lengthInDays = 7
-
-    private static let day: TimeInterval = 24 * 60 * 60
-
-    static func endDate(startedAt: Date) -> Date {
-        startedAt.addingTimeInterval(TimeInterval(lengthInDays) * day)
-    }
-
-    static func access(for owned: OwnedPurchases, now: Date) -> Access {
-        if owned.isUnlocked { return .unlocked }
-        guard let startedAt = owned.trialStartedAt else { return .needsTrial }
-
-        let remaining = endDate(startedAt: startedAt).timeIntervalSince(now)
-        guard remaining > 0 else { return .expired }
-        // Round up so the last partial day still reads "1 day left"; cap at the
-        // trial length in case the device clock is behind the purchase date.
-        let days = Int((remaining / day).rounded(.up))
-        return .trial(daysRemaining: min(max(days, 1), lengthInDays))
-    }
-
-    /// Seconds until `access(for:now:)` next returns something different
-    /// (the day count drops, or the trial ends). Nil when nothing will change.
-    static func secondsUntilNextChange(for owned: OwnedPurchases, now: Date) -> TimeInterval? {
-        guard !owned.isUnlocked, let startedAt = owned.trialStartedAt else { return nil }
-        let remaining = endDate(startedAt: startedAt).timeIntervalSince(now)
-        guard remaining > 0 else { return nil }
-        let intoCurrentDay = remaining.truncatingRemainder(dividingBy: day)
-        return intoCurrentDay > 0 ? intoCurrentDay : day
+/// The entitlement rules, as a pure function of what is owned.
+enum EntitlementPolicy {
+    static func access(for owned: OwnedPurchases) -> Access {
+        // Lifetime always wins, whatever state a subscription is in.
+        if owned.ownsLifetime { return .lifetime }
+        guard let subscription = owned.subscription else {
+            return .notEntitled(lapsed: false)
+        }
+        return subscription.isActive ? .subscribed(subscription) : .notEntitled(lapsed: true)
     }
 }

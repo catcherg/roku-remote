@@ -1,14 +1,24 @@
 import Foundation
 import SwiftUI
 
-/// Source of truth for "may this person use the remote?". Free download,
-/// 7-day trial, then a one-time unlock.
-///
-/// Nothing here is persisted on the device. The trial clock is the purchase
-/// date of the $0 trial transaction, read from StoreKit every time, so
-/// deleting and reinstalling Clicker cannot restart a trial.
+/// What the remote asks before it sends anything to the Roku. Keeps AppState
+/// free of purchase logic.
 @MainActor
-final class EntitlementStore: ObservableObject {
+protocol CommandGate: AnyObject {
+    /// Asked before every key press. False drops the press.
+    func mayPress() -> Bool
+    /// Told once the Roku has accepted a key press.
+    func didPress()
+}
+
+/// Source of truth for "may this person keep using the remote?".
+///
+/// Free download; the remote works for a handful of key presses, then needs
+/// either the weekly subscription (free trial first) or the lifetime unlock.
+/// What is owned is read from StoreKit every time and never saved on the
+/// device. The only thing kept locally is how many free key presses are used.
+@MainActor
+final class EntitlementStore: ObservableObject, CommandGate {
     /// Whether the product details needed to make an offer are available.
     enum OfferState: Equatable {
         case loading
@@ -19,7 +29,7 @@ final class EntitlementStore: ObservableObject {
 
     /// The one purchase action in flight, if any. Drives spinners.
     enum Activity: Equatable {
-        case startingTrial, unlocking, restoring
+        case subscribing, buyingLifetime, restoring
     }
 
     /// Something worth telling the user after an action finished.
@@ -28,33 +38,47 @@ final class EntitlementStore: ObservableObject {
     }
 
     @Published private(set) var access: Access = .loading
+    /// The raw standing behind `access`. Settings shows the renewal date from
+    /// it, and whether a subscription is still running beside a lifetime unlock.
+    @Published private(set) var owned = OwnedPurchases()
     @Published private(set) var offer: OfferState = .loading
     @Published private(set) var activity: Activity?
     @Published var notice: Notice?
+    /// Key presses the Roku has accepted without a plan. Stops counting at
+    /// the allowance.
+    @Published private(set) var freeKeyPressesUsed: Int
+    /// Set when a key press was refused because the free presses are used
+    /// up. The remote screen answers by showing the paywall.
+    @Published var paywallRequested = false
 
-    /// Localized unlock price, once the App Store has answered.
-    var unlockPrice: String? {
-        if case .ready(let details) = offer { return details.unlockPrice }
-        return nil
+    var freeKeyPressesLeft: Int {
+        max(0, FreePreview.keyPressAllowance - freeKeyPressesUsed)
     }
 
-    private let backend: PurchaseBackend
-    private let now: () -> Date
-    private var owned: OwnedPurchases?
-    private var updatesTask: Task<Void, Never>?
-    private var clockTask: Task<Void, Never>?
-    private var offerLoad: Task<PurchaseOffer?, Never>?
+    private static let usedKey = "freeKeyPressesUsed"
 
-    /// - Parameter now: injectable clock, so tests (and the Debug-only launch
-    ///   arguments in DebugPurchaseBackend.swift) can move time without
-    ///   waiting a week.
+    private let backend: PurchaseBackend
+    private let defaults: UserDefaults
+    private let now: () -> Date
+    private var updatesTask: Task<Void, Never>?
+    private var periodEndTask: Task<Void, Never>?
+    private var offerLoad: Task<PurchaseOffer?, Never>?
+    private var offerIsStale = false
+
+    /// - Parameters:
+    ///   - defaults: where the count of used free key presses is kept.
+    ///   - now: injectable clock, so the Debug stand-in store can be run as
+    ///     if it were a later date (see DebugPurchaseBackend.swift).
     init(backend: PurchaseBackend = StoreKitPurchaseBackend(),
+         defaults: UserDefaults = .standard,
          now: @escaping () -> Date = Date.init) {
         self.backend = backend
+        self.defaults = defaults
         self.now = now
-        // Listen from the first moment so no update is missed: Ask to Buy
-        // approvals, refunds, Family Sharing changes, purchases elsewhere.
-        let updates = backend.transactionUpdates()
+        freeKeyPressesUsed = defaults.integer(forKey: Self.usedKey)
+        // Listen from the first moment so no update is missed: renewals,
+        // lapses, Ask to Buy approvals, refunds, purchases on other devices.
+        let updates = backend.purchaseUpdates()
         updatesTask = Task { [weak self] in
             for await _ in updates {
                 await self?.refresh()
@@ -64,7 +88,7 @@ final class EntitlementStore: ObservableObject {
 
     deinit {
         updatesTask?.cancel()
-        clockTask?.cancel()
+        periodEndTask?.cancel()
     }
 
     // MARK: - Loading
@@ -75,47 +99,53 @@ final class EntitlementStore: ObservableObject {
         await loadOffer()
     }
 
-    /// Re-reads the owned purchases from StoreKit and re-derives access.
+    /// Re-reads what is owned from StoreKit and re-derives access.
     func refresh() async {
-        owned = await backend.ownedPurchases()
-        reevaluate()
-    }
-
-    /// Re-derives access from what is already known and the current time.
-    /// Cheap; call when the app returns to the foreground.
-    func reevaluate() {
-        guard let owned else { return }
-        let resolved = TrialPolicy.access(for: owned, now: now())
+        let latest = await backend.ownedPurchases()
+        if latest.subscription != owned.subscription {
+            offerIsStale = true // free-trial eligibility may have changed
+        }
+        owned = latest
+        let resolved = EntitlementPolicy.access(for: latest)
         if resolved != access {
             access = resolved
             notice = nil // whatever it said is out of date now
         }
-        scheduleClockCheck(for: owned)
+        if resolved.isUnlocked { paywallRequested = false }
+        scheduleCheckAtPeriodEnd()
     }
 
-    /// Fetches the products (and so the price). Safe to call again to retry;
-    /// screens that ask at the same time share one request.
+    /// Fetches the products (and so the prices). Safe to call again to retry
+    /// or to pick up a change; screens that ask at the same time share one
+    /// request, and a known offer stays on screen while it is re-fetched.
     func loadOffer() async {
-        if case .ready = offer { return }
+        if case .ready = offer, !offerIsStale { return }
         if offerLoad == nil {
-            offer = .loading
+            if case .ready = offer {} else { offer = .loading }
+            offerIsStale = false
             offerLoad = Task { [backend] in try? await backend.loadOffer() }
         }
         let loaded = await offerLoad?.value ?? nil
         offerLoad = nil
-        offer = loaded.map(OfferState.ready) ?? .unavailable
+        if let loaded {
+            offer = .ready(loaded)
+        } else if case .ready = offer {
+            offerIsStale = true // keep what is shown; try again next time
+        } else {
+            offer = .unavailable
+        }
     }
 
     // MARK: - Actions
 
-    /// Starts the free trial by "buying" the $0 trial product.
-    func startTrial() async {
-        await purchase(.trial, as: .startingTrial)
+    /// Starts the weekly subscription (with its free trial when eligible).
+    func subscribe() async {
+        await purchase(.weekly, as: .subscribing)
     }
 
-    /// Buys the one-time full unlock.
-    func unlock() async {
-        await purchase(.unlock, as: .unlocking)
+    /// Buys the one-time lifetime unlock.
+    func buyLifetime() async {
+        await purchase(.lifetime, as: .buyingLifetime)
     }
 
     func restore() async {
@@ -128,7 +158,7 @@ final class EntitlementStore: ObservableObject {
             try await backend.restore()
             await refresh()
             // Say so only when the sync changed nothing on screen.
-            if access == before, access != .unlocked { notice = .nothingToRestore }
+            if access == before, !access.isUnlocked { notice = .nothingToRestore }
         } catch is CancellationError {
             // User backed out of the App Store sign-in. Nothing to say.
         } catch {
@@ -155,20 +185,46 @@ final class EntitlementStore: ObservableObject {
         }
     }
 
-    // MARK: - Trial clock
+    // MARK: - Free key presses (CommandGate)
 
-    /// While a trial is running, wake up when the day count drops or the trial
-    /// ends, so the paywall appears even if the app stays open.
-    private func scheduleClockCheck(for owned: OwnedPurchases) {
-        clockTask?.cancel()
-        guard let seconds = TrialPolicy.secondsUntilNextChange(for: owned, now: now()) else {
-            clockTask = nil
-            return
+    /// False means the free presses are used up and no plan is owned: the
+    /// press is dropped and the paywall is requested instead.
+    func mayPress() -> Bool {
+        switch access {
+        case .subscribed, .lifetime:
+            return true
+        case .loading:
+            // StoreKit has not answered yet. Never hold up a paying customer.
+            return true
+        case .notEntitled:
+            if freeKeyPressesLeft > 0 { return true }
+            paywallRequested = true
+            return false
         }
-        clockTask = Task { [weak self] in
-            try? await Task.sleep(nanoseconds: UInt64((seconds + 1) * 1_000_000_000))
+    }
+
+    /// Only presses the TV actually received count against the allowance.
+    func didPress() {
+        guard case .notEntitled = access, freeKeyPressesLeft > 0 else { return }
+        freeKeyPressesUsed += 1
+        defaults.set(freeKeyPressesUsed, forKey: Self.usedKey)
+    }
+
+    // MARK: - Subscription period end
+
+    /// StoreKit announces renewals and lapses, but look again just after the
+    /// current period ends in case the app is open at that moment.
+    private func scheduleCheckAtPeriodEnd() {
+        periodEndTask?.cancel()
+        periodEndTask = nil
+        guard case .subscribed(let subscription) = access,
+              let ends = subscription.currentPeriodEnds else { return }
+        let seconds = ends.timeIntervalSince(now())
+        guard seconds > 0 else { return }
+        periodEndTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: UInt64((seconds + 2) * 1_000_000_000))
             guard !Task.isCancelled else { return }
-            self?.reevaluate()
+            await self?.refresh()
         }
     }
 }

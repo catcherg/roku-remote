@@ -1,81 +1,41 @@
 import SwiftUI
 
-/// Polished onboarding (Phase 3 task 5): value prop → trial terms → permission
-/// explainer → scan. The trial page discloses the terms before the trial
-/// starts; the permission page still does its Phase 2 job — explain WHY before
+/// Polished onboarding (Phase 3 task 5): value prop → permission explainer →
+/// scan. The permission page still does its Phase 2 job — explain WHY before
 /// iOS shows the Local Network dialog.
 struct OnboardingView: View {
-    private enum Step: Hashable {
-        case value, trial, permission
-    }
-
     @EnvironmentObject private var app: AppState
-    @EnvironmentObject private var entitlements: EntitlementStore
     @AppStorage("hasOnboarded") private var hasOnboarded = false
-    @State private var step: Step = .value
-    /// Decided once, when onboarding begins, so the trial page does not vanish
-    /// from under the user the moment the trial starts. False on a reinstall
-    /// where the App Store already has a trial or the unlock on record.
-    @State private var includesTrialStep: Bool
-
-    init(includesTrialStep: Bool) {
-        _includesTrialStep = State(initialValue: includesTrialStep)
-    }
-
-    private var needsTrial: Bool { entitlements.access == .needsTrial }
+    @State private var page = 0
 
     var body: some View {
         VStack(spacing: 0) {
-            TabView(selection: $step) {
-                valuePropPage.tag(Step.value)
-                if includesTrialStep {
-                    TrialOfferContent()
-                        .padding(.horizontal, 32)
-                        .tag(Step.trial)
-                }
-                permissionPage.tag(Step.permission)
+            TabView(selection: $page) {
+                valuePropPage.tag(0)
+                permissionPage.tag(1)
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .always))
 
-            Group {
-                if step == .trial && needsTrial {
-                    TrialOfferButton()
+            Button {
+                if page == 0 {
+                    withAnimation { page = 1 }
                 } else {
-                    Button(action: advance) {
-                        PurchaseButtonLabel(title: step == .permission ? "Find My Roku" : "Continue")
-                    }
-                    .buttonStyle(.borderedProminent)
+                    Haptics.medium()
+                    hasOnboarded = true
+                    app.startScan() // triggers the iOS Local Network dialog
                 }
+            } label: {
+                Text(page == 0 ? "Continue" : "Find My Roku")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
             }
+            .buttonStyle(.borderedProminent)
             .padding(.horizontal, 24)
             .padding(.bottom, 28)
         }
         .background(Theme.background.ignoresSafeArea())
-        .onChange(of: entitlements.access) { access in
-            // The trial just started (or a restore found the unlock): move on.
-            if step == .trial, access.allowsRemote {
-                withAnimation { step = .permission }
-            }
-        }
-    }
-
-    private func advance() {
-        switch step {
-        case .value:
-            withAnimation { step = includesTrialStep ? .trial : .permission }
-        case .trial:
-            withAnimation { step = .permission }
-        case .permission:
-            if needsTrial && includesTrialStep {
-                // Swiped past the trial page: the trial has to start first.
-                withAnimation { step = .trial }
-                return
-            }
-            Haptics.medium()
-            hasOnboarded = true
-            app.startScan() // triggers the iOS Local Network dialog
-        }
     }
 
     private var valuePropPage: some View {
@@ -86,7 +46,7 @@ struct OnboardingView: View {
                 .foregroundStyle(Theme.accent)
             Text("Clicker")
                 .font(.system(.largeTitle, design: .rounded).bold())
-            Text("The premium remote for your Roku.\nNo account. No ads. No subscriptions.")
+            Text("The premium remote for your Roku.\nNo account. No ads. No tracking.")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
             Spacer()

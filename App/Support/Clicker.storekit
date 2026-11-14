@@ -10,38 +10,21 @@
     ]
   },
   "identifier" : "C11C4E52",
-  "nonRenewingSubscriptions" : [
-
-  ],
+  "nonRenewingSubscriptions" : [],
   "products" : [
     {
-      "displayPrice" : "0.00",
-      "familyShareable" : false,
-      "internalID" : "6755000001",
-      "localizations" : [
-        {
-          "description" : "Use every Clicker feature free for 7 days.",
-          "displayName" : "7-day Trial",
-          "locale" : "en_US"
-        }
-      ],
-      "productID" : "com.catchergriffin.clicker.trial",
-      "referenceName" : "7-day Trial",
-      "type" : "NonConsumable"
-    },
-    {
-      "displayPrice" : "4.99",
+      "displayPrice" : "24.99",
       "familyShareable" : true,
       "internalID" : "6755000002",
       "localizations" : [
         {
           "description" : "Unlock Clicker forever with one purchase.",
-          "displayName" : "Clicker Full Unlock",
+          "displayName" : "Clicker Lifetime",
           "locale" : "en_US"
         }
       ],
       "productID" : "com.catchergriffin.clicker.unlock",
-      "referenceName" : "Full Unlock",
+      "referenceName" : "Lifetime Unlock",
       "type" : "NonConsumable"
     }
   ],
@@ -98,7 +81,40 @@
     ]
   },
   "subscriptionGroups" : [
-
+    {
+      "id" : "21755001",
+      "localizations" : [],
+      "name" : "Clicker",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "6.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6755000003",
+          "introductoryOffer" : {
+            "internalID" : "6755000004",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P3D"
+          },
+          "localizations" : [
+            {
+              "description" : "Full use of Clicker, billed weekly.",
+              "displayName" : "Clicker Weekly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.catchergriffin.clicker.weekly",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Weekly",
+          "subscriptionGroupID" : "21755001",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : []
+        }
+      ]
+    }
   ],
   "version" : {
     "major" : 4,

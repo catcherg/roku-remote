@@ -87,11 +87,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-ClickerDebugDaysAhead 8"
+            argument = "-ClickerDebugStore YES"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-ClickerDebugStore YES"
+            argument = "-ClickerDebugDaysAhead 4"
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>

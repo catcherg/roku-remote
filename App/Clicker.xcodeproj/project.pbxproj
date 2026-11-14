@@ -32,11 +32,10 @@
 		04A023DA825F0EEDC793B733 /* EntitlementStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080FEEB1328800FFEDB7560 /* EntitlementStore.swift */; };
 		08EB477A4B61D45762D60F9F /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7867F731862355A71B097A12 /* PaywallView.swift */; };
 		EE670DC3142CFF459C06B935 /* PurchaseBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2756DC83B9D2D1226EB5B10 /* PurchaseBackend.swift */; };
-		9FD0277D3166C153F3B74481 /* TrialOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D8D3C656CE9D584B95E538 /* TrialOfferView.swift */; };
+		8C8306A7D997042FCCF24B5E /* EntitlementPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1277EB0A03E1C017F40668 /* EntitlementPolicyTests.swift */; };
 		2B97BE597ACB28E0CC7B323E /* EntitlementStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402FDEAFAA3BDF51833D16AB /* EntitlementStoreTests.swift */; };
 		390600A3D1B211537423D33A /* FakeAppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4511C9E64FCFA1CCE0302E78 /* FakeAppStore.swift */; };
 		E8EA707B4809666399ECFB43 /* StoreKitIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237D739F6D13B15D28FAE8D1 /* StoreKitIntegrationTests.swift */; };
-		C0096694439EA38817369C62 /* TrialPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026B7A464654ED7526E24AEA /* TrialPolicyTests.swift */; };
 		81CD16DACE0A2BC4576D2129 /* Clicker.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 658542C56B58624E41F5663E /* Clicker.storekit */; };
 /* End PBXBuildFile section */
 
@@ -85,11 +84,10 @@
 		A080FEEB1328800FFEDB7560 /* EntitlementStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntitlementStore.swift; sourceTree = "<group>"; };
 		7867F731862355A71B097A12 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		C2756DC83B9D2D1226EB5B10 /* PurchaseBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseBackend.swift; sourceTree = "<group>"; };
-		B3D8D3C656CE9D584B95E538 /* TrialOfferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrialOfferView.swift; sourceTree = "<group>"; };
+		8D1277EB0A03E1C017F40668 /* EntitlementPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntitlementPolicyTests.swift; sourceTree = "<group>"; };
 		402FDEAFAA3BDF51833D16AB /* EntitlementStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntitlementStoreTests.swift; sourceTree = "<group>"; };
 		4511C9E64FCFA1CCE0302E78 /* FakeAppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeAppStore.swift; sourceTree = "<group>"; };
 		237D739F6D13B15D28FAE8D1 /* StoreKitIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitIntegrationTests.swift; sourceTree = "<group>"; };
-		026B7A464654ED7526E24AEA /* TrialPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrialPolicyTests.swift; sourceTree = "<group>"; };
 		658542C56B58624E41F5663E /* Clicker.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Clicker.storekit; sourceTree = "<group>"; };
 		29B273D76BF642CC6B2D5F53 /* ClickerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClickerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -257,7 +255,6 @@
 				A080FEEB1328800FFEDB7560 /* EntitlementStore.swift */,
 				7867F731862355A71B097A12 /* PaywallView.swift */,
 				C2756DC83B9D2D1226EB5B10 /* PurchaseBackend.swift */,
-				B3D8D3C656CE9D584B95E538 /* TrialOfferView.swift */,
 			);
 			path = Purchase;
 			sourceTree = "<group>";
@@ -265,10 +262,10 @@
 		5B75FFF755571203D99A3639 /* ClickerTests */ = {
 			isa = PBXGroup;
 			children = (
+				8D1277EB0A03E1C017F40668 /* EntitlementPolicyTests.swift */,
 				402FDEAFAA3BDF51833D16AB /* EntitlementStoreTests.swift */,
 				4511C9E64FCFA1CCE0302E78 /* FakeAppStore.swift */,
 				237D739F6D13B15D28FAE8D1 /* StoreKitIntegrationTests.swift */,
-				026B7A464654ED7526E24AEA /* TrialPolicyTests.swift */,
 			);
 			path = ClickerTests;
 			sourceTree = "<group>";
@@ -407,7 +404,6 @@
 				04A023DA825F0EEDC793B733 /* EntitlementStore.swift in Sources */,
 				08EB477A4B61D45762D60F9F /* PaywallView.swift in Sources */,
 				EE670DC3142CFF459C06B935 /* PurchaseBackend.swift in Sources */,
-				9FD0277D3166C153F3B74481 /* TrialOfferView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -415,10 +411,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C8306A7D997042FCCF24B5E /* EntitlementPolicyTests.swift in Sources */,
 				2B97BE597ACB28E0CC7B323E /* EntitlementStoreTests.swift in Sources */,
 				390600A3D1B211537423D33A /* FakeAppStore.swift in Sources */,
 				E8EA707B4809666399ECFB43 /* StoreKitIntegrationTests.swift in Sources */,
-				C0096694439EA38817369C62 /* TrialPolicyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

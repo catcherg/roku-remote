@@ -9,11 +9,18 @@ import RokuKit
 /// sweep that never competes with the TV for attention.
 /// All commands route through AppState → RokuKit's ECPClient.
 struct RemoteControlView: View {
+    /// The one sheet on screen at a time. A single slot, so the paywall can
+    /// take over from the keyboard or the channel list when a key press is
+    /// refused there.
+    private enum RemoteSheet: Identifiable {
+        case keyboard, channels, limitedHelp, paywall
+        var id: Self { self }
+    }
+
     @EnvironmentObject private var app: AppState
+    @EnvironmentObject private var entitlements: EntitlementStore
     @StateObject private var haptics = HapticEngine()
-    @State private var showKeyboard = false
-    @State private var showChannels = false
-    @State private var showLimitedHelp = false
+    @State private var sheet: RemoteSheet?
 
     private var isTV: Bool { app.device?.isTV ?? false }
 
@@ -115,25 +122,32 @@ struct RemoteControlView: View {
             }
         }
         .animation(.easeInOut(duration: 0.25), value: app.isReconnecting)
-        // Quiet "N days left" line during the trial; nothing once unlocked.
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            TrialMarker()
+        .sheet(item: $sheet) { sheet in
+            switch sheet {
+            case .keyboard:
+                KeyboardSheet()
+                    .presentationDetents([.height(220)])
+            case .channels:
+                ChannelGridView()
+            case .limitedHelp:
+                NavigationStack { HelpView() }
+            case .paywall:
+                NavigationStack { PaywallView() }
+            }
         }
-        .sheet(isPresented: $showKeyboard) {
-            KeyboardSheet()
-                .presentationDetents([.height(220)])
-        }
-        .sheet(isPresented: $showChannels) {
-            ChannelGridView()
+        // A key press was refused: the free presses are used up and no plan
+        // is owned. Show the plans in place of whatever sheet was open.
+        .onChange(of: entitlements.paywallRequested) { requested in
+            if requested {
+                sheet = .paywall
+                entitlements.paywallRequested = false
+            }
         }
         .alert("Roku is blocking control", isPresented: $app.limitedModeDetected) {
-            Button("Show me the fix") { showLimitedHelp = true }
+            Button("Show me the fix") { sheet = .limitedHelp }
             Button("OK", role: .cancel) {}
         } message: {
             Text("Your Roku's \"Control by mobile apps\" setting is set to Limited. See Help for the 30-second fix.")
-        }
-        .sheet(isPresented: $showLimitedHelp) {
-            NavigationStack { HelpView() }
         }
     }
 
@@ -175,7 +189,7 @@ struct RemoteControlView: View {
         HStack(spacing: 14) {
             Button {
                 haptics.tick()
-                showKeyboard = true
+                sheet = .keyboard
             } label: {
                 Label("Keyboard", systemImage: "keyboard")
             }
@@ -183,7 +197,7 @@ struct RemoteControlView: View {
 
             Button {
                 haptics.tick()
-                showChannels = true
+                sheet = .channels
             } label: {
                 Label("Channels", systemImage: "square.grid.3x3")
             }

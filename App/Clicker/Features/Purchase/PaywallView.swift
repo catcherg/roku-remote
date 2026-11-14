@@ -1,83 +1,150 @@
 import SwiftUI
 
-/// The unlock screen. Two uses:
-/// - the root screen once the trial has expired, where it replaces the remote
-///   and every other feature screen (Help and Settings stay in the toolbar);
-/// - a sheet during the trial, for people who want to unlock early.
+/// The plans screen: the weekly subscription (free trial first, when this
+/// Apple Account is eligible) or the lifetime unlock. Presented as a sheet
+/// from the remote once the free key presses are used up, and from Settings.
+/// Every price, period and trial length shown comes from the App Store
+/// products; nothing here is hard-coded.
 struct PaywallView: View {
     @EnvironmentObject private var entitlements: EntitlementStore
     @Environment(\.dismiss) private var dismiss
-    /// True when presented as a dismissable sheet rather than the root screen.
-    var isSheet = false
+    @State private var selection: PurchaseProduct = .weekly
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
+            VStack(spacing: 12) {
                 Image(systemName: "av.remote")
-                    .font(.system(size: 64))
+                    .font(.system(size: 34))
                     .foregroundStyle(Theme.accent)
-                    .padding(.top, 32)
-                Text(status)
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.secondary)
-                Text("One price, forever.")
-                    .font(.system(.largeTitle, design: .rounded).bold())
-                    .multilineTextAlignment(.center)
-                Text("Unlock Clicker once and it's yours. No subscription, no ads, no account.")
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(.secondary)
-
-                VStack(alignment: .leading, spacing: 12) {
-                    feature("hand.draw", "Eyes-free swipe remote")
-                    feature("keyboard", "Type with your phone's keyboard")
-                    feature("square.grid.3x3", "One-tap channel launcher")
-                    if isFamilyShareable {
-                        feature("person.2", "Shared with your family through Family Sharing")
-                    }
+                if let status {
+                    Text(status)
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(.secondary)
                 }
-                .padding(.top, 4)
+                Text("Keep using Clicker")
+                    .font(.system(.title, design: .rounded).bold())
+                    .multilineTextAlignment(.center)
+                Text("Both plans include everything: the swipe remote, typing with your phone's keyboard, the channel launcher, and volume and power on Roku TVs.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                plans
             }
-            .padding(.horizontal, 32)
-            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 24)
+            .padding(.bottom, 12)
         }
         .safeAreaInset(edge: .bottom) { actions }
         .background(Theme.background.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if isSheet {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Close") { dismiss() }
-                }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Close") { dismiss() }
             }
         }
-        .modifier(RootPaywallToolbar(isEnabled: !isSheet))
         .task { await entitlements.loadOffer() }
         .onChange(of: entitlements.access) { access in
-            if isSheet, access == .unlocked { dismiss() }
+            if access.isUnlocked {
+                Haptics.medium()
+                dismiss()
+            }
         }
+    }
+
+    // MARK: - Plans
+
+    @ViewBuilder private var plans: some View {
+        switch entitlements.offer {
+        case .ready(let offer):
+            VStack(spacing: 10) {
+                planCard(.weekly,
+                         title: "Weekly",
+                         price: PlanCopy.weeklyPrice(offer),
+                         detail: PlanCopy.weeklyDetail(offer))
+                planCard(.lifetime,
+                         title: "Lifetime",
+                         price: PlanCopy.lifetimePrice(offer),
+                         detail: PlanCopy.lifetimeDetail(offer))
+            }
+        case .loading:
+            ProgressView()
+                .padding(.vertical, 24)
+        case .unavailable:
+            Text("Clicker couldn't reach the App Store to show the plans and prices. Check your connection and try again.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.vertical, 12)
+        }
+    }
+
+    private func planCard(_ product: PurchaseProduct, title: String,
+                          price: String, detail: String) -> some View {
+        let isSelected = selection == product
+        return Button {
+            selection = product
+        } label: {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundStyle(isSelected ? Theme.accent : Color.secondary)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(title)
+                        .font(.headline)
+                    Text(price)
+                        .font(.subheadline.weight(.medium))
+                    Text(detail)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+                .multilineTextAlignment(.leading)
+                Spacer(minLength: 0)
+            }
+            .padding(14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(RoundedRectangle(cornerRadius: 16).fill(Theme.surface))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .strokeBorder(isSelected ? Theme.accent : Color.clear, lineWidth: 2)
+            )
+            .contentShape(RoundedRectangle(cornerRadius: 16))
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     // MARK: - Actions
 
     private var actions: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 6) {
             if let notice = entitlements.notice {
                 Text(notice.message)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
+            } else if case .ready(let offer) = entitlements.offer {
+                // The selected plan's terms stay beside the button, where
+                // they cannot be scrolled out of sight.
+                Text(PlanCopy.disclosure(for: selection, offer: offer))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             Button {
                 Task {
-                    if entitlements.offer == .unavailable {
+                    guard case .ready = entitlements.offer else {
                         await entitlements.loadOffer()
-                    } else {
-                        Haptics.medium()
-                        await entitlements.unlock()
+                        return
+                    }
+                    switch selection {
+                    case .weekly: await entitlements.subscribe()
+                    case .lifetime: await entitlements.buyLifetime()
                     }
                 }
             } label: {
-                PurchaseButtonLabel(title: buyTitle, isBusy: isBuying)
+                PurchaseButtonLabel(title: buttonTitle, isBusy: isBuying)
             }
             .buttonStyle(.borderedProminent)
             .disabled(isBuying || entitlements.activity != nil)
@@ -95,102 +162,113 @@ struct PaywallView: View {
             .frame(minHeight: Theme.minTarget)
             .disabled(entitlements.activity != nil)
 
-            Text("One-time purchase. No subscription.")
-                .font(.caption2)
-                .foregroundStyle(.tertiary)
+            HStack(spacing: 20) {
+                Link("Terms of Use", destination: AppInfo.termsURL)
+                Link("Privacy Policy", destination: AppInfo.privacyPolicyURL)
+            }
+            .font(.footnote)
         }
         .padding(.horizontal, 24)
-        .padding(.top, 12)
+        .padding(.top, 10)
         .padding(.bottom, 8)
         .background(Theme.background)
     }
 
     // MARK: - Copy
 
-    private var status: String {
+    private var status: String? {
         switch entitlements.access {
-        case .trial(let days):
-            return "\(TrialCopy.daysLeft(days)) in your free trial"
-        case .unlocked:
-            return "Clicker is unlocked"
-        case .expired, .needsTrial, .loading:
-            return "Your free trial has ended"
+        case .notEntitled(lapsed: true):
+            return "Your subscription has ended"
+        case .notEntitled(lapsed: false):
+            let left = entitlements.freeKeyPressesLeft
+            if left == 0 { return "Your free key presses are used up" }
+            return left == 1 ? "1 free key press left" : "\(left) free key presses left"
+        case .loading, .subscribed, .lifetime:
+            return nil
         }
     }
 
-    /// The price always comes from the App Store product; with no product
-    /// loaded the button offers a retry instead of guessing an amount.
-    private var buyTitle: String {
+    private var buttonTitle: String {
         switch entitlements.offer {
-        case .ready(let offer): return "Unlock for \(offer.unlockPrice)"
-        case .loading: return "Unlock Clicker"
+        case .ready(let offer): return PlanCopy.buttonTitle(for: selection, offer: offer)
+        case .loading: return "Loading"
         case .unavailable: return "Try Again"
         }
     }
 
     private var isBuying: Bool {
-        entitlements.offer == .loading || entitlements.activity == .unlocking
+        entitlements.offer == .loading
+            || entitlements.activity == .subscribing
+            || entitlements.activity == .buyingLifetime
     }
 
-    private var isFamilyShareable: Bool {
-        if case .ready(let offer) = entitlements.offer { return offer.unlockIsFamilyShareable }
-        return false
+}
+
+/// The words on the plans screen, built from the App Store's own prices,
+/// billing period and trial length.
+enum PlanCopy {
+    /// "3-day free trial, then $6.99 per week", or "$6.99 per week" when
+    /// this Apple Account has no free trial to use.
+    static func weeklyPrice(_ offer: PurchaseOffer) -> String {
+        let recurring = "\(offer.weeklyPrice) per \(offer.weeklyPeriod.perText)"
+        guard let trial = offer.freeTrial else { return recurring }
+        return "\(trial.adjective) free trial, then \(recurring)"
     }
 
-    private func feature(_ symbol: String, _ text: String) -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: symbol)
-                .foregroundStyle(Theme.accent)
-                .frame(width: 28)
-            Text(text)
+    static func weeklyDetail(_ offer: PurchaseOffer) -> String {
+        "Renews automatically every \(offer.weeklyPeriod.perText) until you cancel."
+    }
+
+    static func lifetimePrice(_ offer: PurchaseOffer) -> String {
+        "\(offer.lifetimePrice) once"
+    }
+
+    static func lifetimeDetail(_ offer: PurchaseOffer) -> String {
+        offer.lifetimeIsFamilyShareable
+            ? "One payment, nothing renews. Includes Family Sharing."
+            : "One payment, nothing renews."
+    }
+
+    static func buttonTitle(for product: PurchaseProduct, offer: PurchaseOffer) -> String {
+        switch product {
+        case .weekly:
+            if let trial = offer.freeTrial {
+                return "Start \(trial.adjective.capitalized) Free Trial"
+            }
+            return "Subscribe for \(offer.weeklyPrice) per \(offer.weeklyPeriod.perText)"
+        case .lifetime:
+            return "Buy Lifetime for \(offer.lifetimePrice)"
+        }
+    }
+
+    /// The terms of the selected plan, spelled out next to the button.
+    static func disclosure(for product: PurchaseProduct, offer: PurchaseOffer) -> String {
+        switch product {
+        case .weekly:
+            let renewal = "the subscription renews automatically at \(offer.weeklyPrice) per \(offer.weeklyPeriod.perText) until you cancel. Cancel any time in your Apple Account settings, at least a day before it renews."
+            if let trial = offer.freeTrial {
+                return "The free trial lasts \(trial.value) \(trial.unit.rawValue)\(trial.value == 1 ? "" : "s"). After that, \(renewal)"
+            }
+            return renewal.prefix(1).uppercased() + renewal.dropFirst()
+        case .lifetime:
+            return "One payment of \(offer.lifetimePrice). It is not a subscription and never renews."
         }
     }
 }
 
-/// Help + Settings links, only when the paywall is the root screen.
-private struct RootPaywallToolbar: ViewModifier {
-    let isEnabled: Bool
-
-    func body(content: Content) -> some View {
-        if isEnabled {
-            content.purchaseScreenToolbar()
-        } else {
-            content
-        }
-    }
-}
-
-enum TrialCopy {
-    static func daysLeft(_ days: Int) -> String {
-        days == 1 ? "1 day left" : "\(days) days left"
-    }
-}
-
-/// Quiet "N days left" line under the remote and the device list while the
-/// trial runs. Tapping it opens the unlock sheet. Renders nothing otherwise.
-struct TrialMarker: View {
-    @EnvironmentObject private var entitlements: EntitlementStore
-    @State private var showUnlock = false
+/// Full-width label for the purchase buttons, with a spinner while busy.
+struct PurchaseButtonLabel: View {
+    let title: String
+    var isBusy = false
 
     var body: some View {
-        if case .trial(let days) = entitlements.access {
-            Button {
-                showUnlock = true
-            } label: {
-                Text("Free trial · \(TrialCopy.daysLeft(days))")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, minHeight: 30)
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            .background(Theme.background)
-            .accessibilityHint("Shows the one-time unlock")
-            .sheet(isPresented: $showUnlock) {
-                NavigationStack {
-                    PaywallView(isSheet: true)
-                }
-            }
+        ZStack {
+            Text(title).opacity(isBusy ? 0 : 1)
+            if isBusy { ProgressView() }
         }
+        .font(.headline)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 10)
     }
 }

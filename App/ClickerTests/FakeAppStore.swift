@@ -21,19 +21,22 @@ final class TestClock: @unchecked Sendable {
     }
 }
 
-/// An in-memory App Store. It models the *Apple Account's* purchase history,
-/// which lives on Apple's side and outlives any one install — so creating a
-/// second `EntitlementStore` against the same `FakeAppStore` is a reinstall.
+/// An in-memory App Store. It models the *Apple Account's* purchases, which
+/// live on Apple's side and outlive any one install — so creating a second
+/// `EntitlementStore` against the same `FakeAppStore` is a reinstall.
 final class FakeAppStore: PurchaseBackend, @unchecked Sendable {
     struct Failure: Error {}
+
+    static let trial = BillingPeriod(value: 3, unit: .day)
+    static let week = BillingPeriod(value: 1, unit: .week)
 
     private let lock = NSLock()
     private let clock: TestClock
 
-    // The account's history, as Apple remembers it.
-    private var trialPurchasedAt: Date?
-    private var ownsUnlock = false
-    private var pendingUnlock = false
+    // The account, as Apple remembers it.
+    private var ownsLifetime = false
+    private var subscription: SubscriptionRecord?
+    private var trialUsed = false
 
     // What this device can currently see of it.
     private var deviceHasSynced = true
@@ -41,8 +44,8 @@ final class FakeAppStore: PurchaseBackend, @unchecked Sendable {
 
     // Scripted behaviour.
     private var nextPurchaseOutcome: Result<PurchaseOutcome, Error> = .success(.purchased)
-    private var offerResult: Result<PurchaseOffer, Error> =
-        .success(PurchaseOffer(unlockPrice: "$4.99", unlockIsFamilyShareable: true))
+    private var offerFailure: Error?
+    private var prices = (weekly: "$6.99", lifetime: "$24.99")
     private var restoreResult: Result<Void, Error> = .success(())
 
     init(clock: TestClock) {
@@ -60,8 +63,12 @@ final class FakeAppStore: PurchaseBackend, @unchecked Sendable {
         locked { nextPurchaseOutcome = outcome }
     }
 
-    func setOfferResult(_ result: Result<PurchaseOffer, Error>) {
-        locked { offerResult = result }
+    func setOfferFailure(_ error: Error?) {
+        locked { offerFailure = error }
+    }
+
+    func setPrices(weekly: String, lifetime: String) {
+        locked { prices = (weekly, lifetime) }
     }
 
     func setRestoreResult(_ result: Result<Void, Error>) {
@@ -73,16 +80,36 @@ final class FakeAppStore: PurchaseBackend, @unchecked Sendable {
         locked { deviceHasSynced = false }
     }
 
-    /// The unlock arrives from outside the app: Ask to Buy approved, bought on
-    /// another device, or shared by a family member.
-    func grantUnlockFromElsewhere() {
-        locked { ownsUnlock = true; pendingUnlock = false }
+    /// Changes the subscription the way the App Store would on its own
+    /// (renewal, failed payment, lapse, cancellation) and announces it.
+    func updateSubscription(_ change: (inout SubscriptionRecord) -> Void) {
+        locked {
+            guard var record = subscription else { return }
+            change(&record)
+            subscription = record
+        }
+        sendUpdate()
+    }
+
+    /// The free trial ends and the first payment goes through.
+    func convertTrialToPaid() {
+        let nextWeek = clock.now.addingTimeInterval(7 * 24 * 60 * 60)
+        updateSubscription {
+            $0.isInFreeTrial = false
+            $0.currentPeriodEnds = nextWeek
+        }
+    }
+
+    /// The lifetime unlock arrives from outside the app: Ask to Buy approved,
+    /// bought on another device, or shared by a family member.
+    func grantLifetimeFromElsewhere() {
+        locked { ownsLifetime = true }
         sendUpdate()
     }
 
     /// Refund, or Family Sharing switched off.
-    func revokeUnlock() {
-        locked { ownsUnlock = false }
+    func revokeLifetime() {
+        locked { ownsLifetime = false }
         sendUpdate()
     }
 
@@ -94,35 +121,45 @@ final class FakeAppStore: PurchaseBackend, @unchecked Sendable {
     // MARK: - PurchaseBackend
 
     func loadOffer() async throws -> PurchaseOffer {
-        try locked { try offerResult.get() }
+        try locked {
+            if let offerFailure { throw offerFailure }
+            return PurchaseOffer(
+                weeklyPrice: prices.weekly,
+                weeklyPeriod: Self.week,
+                // Like the App Store: one free trial per Apple Account.
+                freeTrial: trialUsed ? nil : Self.trial,
+                lifetimePrice: prices.lifetime,
+                lifetimeIsFamilyShareable: true
+            )
+        }
     }
 
     func ownedPurchases() async -> OwnedPurchases {
         locked {
             guard deviceHasSynced else { return OwnedPurchases() }
-            return OwnedPurchases(trialStartedAt: trialPurchasedAt, isUnlocked: ownsUnlock)
+            return OwnedPurchases(ownsLifetime: ownsLifetime, subscription: subscription)
         }
     }
 
     func purchase(_ product: PurchaseProduct) async throws -> PurchaseOutcome {
         try locked {
             let outcome = try nextPurchaseOutcome.get()
-            switch outcome {
-            case .purchased:
-                switch product {
-                case .trial:
-                    // Like the real App Store: buying a non-consumable that is
-                    // already owned hands back the original transaction.
-                    if trialPurchasedAt == nil { trialPurchasedAt = clock.now }
-                case .unlock:
-                    ownsUnlock = true
+            guard outcome == .purchased else { return outcome }
+            switch product {
+            case .weekly:
+                if subscription?.isActive != true {
+                    let days: Double = trialUsed ? 7 : 3
+                    subscription = SubscriptionRecord(
+                        state: .subscribed,
+                        isInFreeTrial: !trialUsed,
+                        currentPeriodEnds: clock.now.addingTimeInterval(days * 24 * 60 * 60)
+                    )
+                    trialUsed = true
                 }
-                deviceHasSynced = true
-            case .pending:
-                if product == .unlock { pendingUnlock = true }
-            case .cancelled:
-                break
+            case .lifetime:
+                ownsLifetime = true
             }
+            deviceHasSynced = true
             return outcome
         }
     }
@@ -134,7 +171,7 @@ final class FakeAppStore: PurchaseBackend, @unchecked Sendable {
         }
     }
 
-    func transactionUpdates() -> AsyncStream<Void> {
+    func purchaseUpdates() -> AsyncStream<Void> {
         AsyncStream { continuation in
             locked { continuations.append(continuation) }
         }

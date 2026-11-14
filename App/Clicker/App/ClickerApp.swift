@@ -2,8 +2,16 @@ import SwiftUI
 
 @main
 struct ClickerApp: App {
-    @StateObject private var appState = AppState()
-    @StateObject private var entitlements = ClickerApp.makeEntitlementStore()
+    @StateObject private var entitlements: EntitlementStore
+    @StateObject private var appState: AppState
+
+    init() {
+        // One entitlement store for the whole app; the remote's command layer
+        // asks it before every key press.
+        let store = ClickerApp.makeEntitlementStore()
+        _entitlements = StateObject(wrappedValue: store)
+        _appState = StateObject(wrappedValue: AppState(gate: store))
+    }
 
     var body: some Scene {
         WindowGroup {

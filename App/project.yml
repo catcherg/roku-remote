@@ -36,15 +36,17 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
 
-  # Unit tests for app-target logic (trial / unlock entitlements). Hosted by
-  # the app so StoreKitTest can run real purchases against Clicker.storekit.
+  # Unit tests for app-target logic (subscription / lifetime entitlements and
+  # the free key presses). Hosted by the app so StoreKitTest can run real
+  # purchases against Clicker.storekit.
   ClickerTests:
     type: bundle.unit-test
     platform: iOS
     sources:
       - ClickerTests
-      # Local StoreKit products (7-day Trial + Full Unlock). Bundled with the
-      # tests only; it never ships inside the app.
+      # Local StoreKit products (weekly subscription with a 3-day free trial,
+      # and the lifetime unlock). Bundled with the tests only; it never ships
+      # inside the app.
       - path: Support/Clicker.storekit
         buildPhase: resources
     dependencies:
@@ -67,11 +69,11 @@ schemes:
       # Run from Xcode with the local StoreKit products instead of the App Store.
       storeKitConfiguration: Support/Clicker.storekit
       # Debug-only switches (see DebugPurchaseBackend.swift). Tick them in the
-      # scheme editor: run as if it were 8 days from now (trial expired), or
-      # use the stand-in store instead of StoreKit.
+      # scheme editor: use the stand-in store instead of StoreKit, and run as
+      # if it were 4 days from now (past the free trial).
       commandLineArguments:
-        "-ClickerDebugDaysAhead 8": false
         "-ClickerDebugStore YES": false
+        "-ClickerDebugDaysAhead 4": false
     test:
       config: Debug
       targets:
