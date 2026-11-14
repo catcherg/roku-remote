@@ -536,6 +536,7 @@ private struct GridKeyStyle: ButtonStyle {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         RemoteControlView()
@@ -543,3 +544,4 @@ private struct GridKeyStyle: ButtonStyle {
     .environmentObject(AppState())
     .environmentObject(EntitlementStore.preview())
 }
+#endif
