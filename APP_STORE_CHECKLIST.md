@@ -28,6 +28,7 @@ Last updated 2026-11-15.
 - [x] Privacy manifest added at [App/Clicker/PrivacyInfo.xcprivacy](App/Clicker/PrivacyInfo.xcprivacy): no tracking, no collected data, UserDefaults with reason `CA92.1`. It lives under `Clicker/`, so XcodeGen picks it up as a resource.
 - [x] `Info.plist` reads `$(MARKETING_VERSION)` / `$(CURRENT_PROJECT_VERSION)`. The version is **1.0.0**. Bump `CURRENT_PROJECT_VERSION` before every upload.
 - [x] `DEVELOPMENT_TEAM` is in `project.yml`, so regenerating the project keeps signing.
+- [ ] **Decide what a failed renewal does.** Today the remote stays unlocked through Apple's billing grace period **and** through billing retry (`SubscriptionRecord.isActive` in [Entitlement.swift](App/Clicker/Features/Purchase/Entitlement.swift)). Apple keeps retrying a failed charge for up to 60 days, so a customer whose card fails could get about eight unpaid weeks. Either keep that on purpose, or unlock only during the grace period.
 - [ ] Decide on the multicast entitlement. Was the `com.apple.developer.networking.multicast` request approved?
   - **Yes:** add a `.entitlements` file with that key, regenerate the provisioning profile, and turn on the SSDP flag (`SSDPDiscoverer.swift:12`).
   - **No/pending:** ship with subnet scan only. Leave the entitlement out entirely. Signing fails if you claim an entitlement that wasn't granted.
@@ -62,25 +63,27 @@ The product IDs are in [Entitlement.swift](App/Clicker/Features/Purchase/Entitle
 
 - [ ] **Subscription group** "Clicker", containing one auto-renewable subscription:
   - Product ID `com.catchergriffin.clicker.weekly`, reference name "Weekly", duration **1 week**, price **$6.99** (or your choice).
-  - **Introductory offer: Free trial, 3 days**, for new subscribers, all territories.
+  - **Introductory offer: Free trial, 3 days**, for new subscribers, all territories. An offer can't be edited once it's created; delete it and make a new one.
   - Display name "Clicker Weekly", description "Full use of Clicker, billed weekly."
   - Subscription group display name and at least one group localization.
   - Family Sharing **off** (matches `Clicker.storekit`).
 - [ ] **Non-consumable** `com.catchergriffin.clicker.unlock`, reference name "Lifetime Unlock", display name "Clicker Lifetime", price **$24.99** (or your choice), Family Sharing **on**.
+- [ ] Do **not** create the old `com.catchergriffin.clicker.trial` product. The free trial is now the weekly plan's introductory offer. If you already created it, delete it or leave it out of the submission.
+- [ ] Check the price in each country. Apple fills them in from the US price. Set Mexico by hand, as the go-to-market doc says.
 - [ ] For each one: localized display name and description, plus a **review screenshot** (the plans sheet). The screenshot is required.
 - [ ] Both show **"Ready to Submit."** The first IAPs and the first subscription must be attached to the 1.0 version page when you submit (see §10). They can't be submitted on their own.
 - [ ] **Guideline 3.1.2 (subscriptions) check:** the plans sheet shows the price per week, the trial length, that it auto-renews until cancelled, and links to Terms and Privacy. Restore is reachable from the sheet and from Settings. All of this is in `PaywallView` already, so re-check it on the final build.
-- [ ] Optional but common for subscription apps: in App Store Connect, set the **License Agreement** to Apple's standard EULA, or link your Terms in the app description (the reviewer looks for a Terms of Use link in the metadata).
+- [ ] **Terms of Use link in the metadata. This is required, not optional.** Apple says both the app and the App Store metadata must link to the Terms of Use and Privacy Policy. The plans sheet already does. For the metadata, put `https://getclicker.me/terms` in the description (§9), in every language you add. A missing link is a common 3.1.2 rejection.
 
 ## 7. TestFlight
 
 - [ ] Archive the Release build (Xcode → Product → Archive) and upload through Organizer.
 - [ ] Answer export compliance. `ITSAppUsesNonExemptEncryption = false` is already set, so this should be skipped automatically.
-- [ ] Internal testing: create a **Sandbox Apple Account** (Users and Access → Sandbox) and test on a real device. Sandbox weeks renew every few minutes, so a full subscription lifecycle takes under an hour.
+- [ ] Internal testing: create a **Sandbox Apple Account** (Users and Access → Sandbox) and test on a real device. In sandbox a weekly plan renews every 3 minutes and stops after 12 renewals, so a full subscription lifecycle takes under an hour. In a TestFlight build it renews once a day, 6 times.
   - [ ] Use the 10 free presses, then the plans sheet appears
   - [ ] Start the weekly plan: the 3-day free trial shows, Settings shows "trial" and the renewal date
   - [ ] Let it renew a few times, then cancel in Manage Subscription and confirm the app locks after expiry
-  - [ ] Billing retry / grace period keeps the app unlocked (turn on Billing Grace Period for the app in App Store Connect first; covered by unit tests if sandbox won't trigger it)
+  - [ ] Billing retry / grace period does what you decided in §2; today both keep the app unlocked (turn on Billing Grace Period for the app in App Store Connect first; covered by unit tests if sandbox won't trigger it)
   - [ ] Buy Lifetime while subscribed: the app shows the "cancel your subscription" reminder
   - [ ] Delete and reinstall, then **Restore Purchases** (both products)
   - [ ] Ask to Buy / pending flow, and a family-shared Lifetime
@@ -110,6 +113,7 @@ The product IDs are in [Entitlement.swift](App/Clicker/Features/Purchase/Entitle
 - [ ] **Age rating questionnaire** (the 2025 revised version): answer "none" throughout, which should give 4+.
 - [ ] **Content rights:** the app shows channel icons pulled from the user's own Roku. Answer honestly and mention it in the review notes.
 - [ ] **Pricing & Availability:** Free, with territories chosen (see the EU/DSA note in §4).
+- [ ] **Spanish (Mexico) listing**, as the go-to-market doc decided: name, subtitle, keywords, description with the Terms link, and the display names of both products and the subscription group.
 
 ## 10. Submit for review
 
