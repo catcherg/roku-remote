@@ -25,6 +25,7 @@
 		DA6F6B8C676F2E0271011B63 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6858DE05613A01A3B29D6E07 /* Haptics.swift */; };
 		DC8FF22FE89AC44E5798EAA1 /* IconCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73910C186D61F202E122C715 /* IconCache.swift */; };
 		F79825D6CB6700AFFB8D7652 /* StatusPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF386EA66BF0568970AC3BB /* StatusPill.swift */; };
+		C3A1E6F20B7D4A9E5F1C2D31 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C3A1E6F20B7D4A9E5F1C2D30 /* PrivacyInfo.xcprivacy */; };
 		FE4844203BC8BDAB5851E0AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA201205D27215063FF81850 /* Assets.xcassets */; };
 		FF02B84A5A129D7B83E56C69 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CFFFA2611CC2AC9E399766 /* AppState.swift */; };
 		4B12D400844629668E67CC12 /* DebugPurchaseBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FC6A9D0023B6FDFEB3D01B /* DebugPurchaseBackend.swift */; };
@@ -71,6 +72,7 @@
 		8A9EA07AFC315837454B24A9 /* KeyboardSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSheet.swift; sourceTree = "<group>"; };
 		9F988BF6FAB3CC9A596F72DD /* RemoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteView.swift; sourceTree = "<group>"; };
 		AF5D91DEE986DAE223D62E8F /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		C3A1E6F20B7D4A9E5F1C2D30 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		BA201205D27215063FF81850 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BA9D39B2C6B3AB84044DB4F3 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		BCFCD7B9660D8DB6EC2C8509 /* DiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryView.swift; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 				F8730757C227A935337455CE /* App */,
 				3D36B1F3CF3580619385DEFC /* DesignSystem */,
 				C0DED8EAACB294E6280E1380 /* Features */,
+				C3A1E6F20B7D4A9E5F1C2D30 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Clicker;
 			sourceTree = "<group>";
@@ -363,6 +366,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE4844203BC8BDAB5851E0AC /* Assets.xcassets in Resources */,
+				C3A1E6F20B7D4A9E5F1C2D31 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -442,7 +446,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.catchergriffin.clicker;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.10;
@@ -519,7 +523,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.catchergriffin.clicker;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.10;
