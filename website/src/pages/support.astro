@@ -1,0 +1,105 @@
+---
+import Base from "../layouts/Base.astro";
+
+const email = "support@getclicker.me";
+---
+
+<Base
+  title="Support — Clicker"
+  description="Help with Clicker: finding your Roku, fixing buttons that don’t respond, managing or restoring a plan, and how to reach us."
+>
+  <article class="container prose">
+    <p class="ecp">support</p>
+    <h1>Support</h1>
+    <p>
+      Stuck? Most problems are fixed by one of the steps below. If not,
+      email <a href={`mailto:${email}`}>{email}</a> with your iPhone model,
+      iOS version, and Roku model, and we’ll get back to you.
+    </p>
+
+    <h2>Clicker can’t find my Roku</h2>
+    <ul>
+      <li>Your phone and Roku must be on the same Wi-Fi network.</li>
+      <li>
+        Guest networks and hotel Wi-Fi often block device-to-device traffic.
+        Use your main home network.
+      </li>
+      <li>A VPN on your phone can block local discovery. Turn it off and rescan.</li>
+      <li>
+        Clicker needs the Local Network permission. Check it in iOS Settings →
+        Clicker → Local Network.
+      </li>
+      <li>
+        Wake the Roku by pressing a button on its physical remote, then rescan.
+      </li>
+      <li>
+        As a last resort, connect by IP address. On the Roku, Settings →
+        Network → About shows it.
+      </li>
+    </ul>
+
+    <h2>It finds my Roku, but buttons don’t work</h2>
+    <p>
+      Your Roku is probably set to block control from mobile apps. With the
+      Roku’s own remote, go to Home → Settings → System → Advanced system
+      settings → Control by mobile apps → Network access, and choose
+      <strong>Default</strong> (not Limited).
+    </p>
+
+    <h2>My Roku stopped responding</h2>
+    <p>
+      It may have been turned off, or your router gave it a new address. Pull
+      down on the Devices screen to rescan. Clicker recognizes your Roku by
+      its serial number and reconnects.
+    </p>
+
+    <h2>Plans and billing</h2>
+    <ul>
+      <li>
+        <strong>Restore a purchase:</strong> in Clicker, open Settings and tap
+        Restore Purchases, signed in with the same Apple Account you bought
+        with.
+      </li>
+      <li>
+        <strong>Cancel the weekly plan:</strong> open the iOS Settings app,
+        tap your name, then Subscriptions → Clicker. Clicker’s own Settings
+        screen also has a Manage Subscription button.
+      </li>
+      <li>
+        <strong>Refunds:</strong> payments go through Apple, so refunds do
+        too. Request one at{" "}
+        <a href="https://reportaproblem.apple.com" rel="noopener">reportaproblem.apple.com</a>.
+      </li>
+    </ul>
+
+    <h2>Contact</h2>
+    <p>
+      Email <a href={`mailto:${email}`}>{email}</a>. We read every message.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .prose {
+    max-width: 680px;
+    padding-block: calc(var(--space) * 10);
+  }
+
+  .prose h1 { margin-top: calc(var(--space) * 3); }
+
+  .prose h1 + p { margin-top: calc(var(--space) * 2); }
+
+  .prose h2 {
+    font-size: 24px;
+    margin-top: calc(var(--space) * 5);
+    margin-bottom: calc(var(--space) * 1.5);
+  }
+
+  .prose p + p { margin-top: calc(var(--space) * 2); }
+
+  .prose ul {
+    padding-left: 1.25em;
+    display: grid;
+    gap: var(--space);
+  }
+</style>
