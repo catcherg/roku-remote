@@ -28,6 +28,7 @@ struct OnboardingView: View {
             } label: {
                 Text(page == 0 ? "Continue" : "Find My Roku")
                     .font(.headline)
+                    .foregroundStyle(Theme.onAccent)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
             }

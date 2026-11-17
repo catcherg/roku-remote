@@ -26,62 +26,18 @@ struct RemoteControlView: View {
 
     var body: some View {
         GeometryReader { proxy in
-            VStack(spacing: 20) {
-                SwipeSurface(
-                    onSwipe: { direction, repeats in swipe(direction, repeats: repeats) },
-                    onSelect: select
-                )
-                .frame(height: max(proxy.size.height * 0.5, 260))
-
-                // Flexible control area: absorbs all remaining height so there
-                // is no dead space on tall phones, and compresses gracefully
-                // on small ones.
-                VStack(spacing: 16) {
-                    HStack(spacing: 16) {
-                        gridKey(.back, "arrow.backward", "Back") {
-                            haptics.thud(.medium) // heavier thud; never a dialog
-                            app.send(.back)
-                        }
-                        gridKey(.home, "house.fill", "Home") {
-                            haptics.tick()
-                            app.send(.home)
-                        }
-                    }
-                    HStack(spacing: 16) {
-                        gridKey(.play, "playpause.fill", "Play or pause") {
-                            haptics.tick()
-                            app.send(.play)
-                        }
-                        if isTV {
-                            gridKey(.volumeMute, "speaker.slash.fill", "Mute") {
-                                haptics.tick()
-                                app.send(.volumeMute)
-                            }
-                        } else {
-                            // Sticks can't mute a TV over ECP (CLAUDE.md:
-                            // volume keys are TV-only) — no dead buttons.
-                            gridKey(.instantReplay, "arrow.uturn.backward", "Instant replay") {
-                                haptics.tick()
-                                app.send(.instantReplay)
-                            }
-                        }
-                    }
-                    if isTV {
-                        HStack(spacing: 16) {
-                            HoldKeyButton(key: .volumeDown, symbol: "speaker.minus.fill",
-                                          label: "Volume down, hold to ramp")
-                            HoldKeyButton(key: .volumeUp, symbol: "speaker.plus.fill",
-                                          label: "Volume up, hold to ramp")
-                        }
-                    }
-                }
-                .frame(maxHeight: .infinity)
-
-                quickActions
+            // The first arrangement whose controls all fit the screen height
+            // wins: roomy on tall phones, tighter on small ones, so the
+            // bottom row is never pushed off screen.
+            ViewThatFits(in: .vertical) {
+                controls(height: proxy.size.height, metrics: .regular)
+                controls(height: proxy.size.height, metrics: .compact)
+                controls(height: proxy.size.height, metrics: .tight)
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 8)
-            .padding(.bottom, 12)
+            // The keys are glyphs in fixed-size shapes. Past this size the
+            // glyphs outgrow them (the volume symbols collide), so the
+            // remote stops scaling here; every other screen scales fully.
+            .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         }
         .background(Theme.background.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
@@ -172,46 +128,148 @@ struct RemoteControlView: View {
 
     // MARK: - Controls
 
-    private func gridKey(_ key: ECPKey, _ symbol: String, _ label: String,
+    /// The whole remote at one set of sizes: swipe surface, key grid, then
+    /// the quick actions.
+    private func controls(height: CGFloat, metrics: RemoteMetrics) -> some View {
+        VStack(spacing: metrics.sectionSpacing) {
+            SwipeSurface(
+                onSwipe: { direction, repeats in swipe(direction, repeats: repeats) },
+                onSelect: select
+            )
+            .frame(height: max(height * metrics.surfaceShare, metrics.surfaceMinHeight))
+
+            // Flexible control area: absorbs all remaining height so there
+            // is no dead space on tall phones.
+            VStack(spacing: metrics.keySpacing) {
+                HStack(spacing: metrics.keySpacing) {
+                    gridKey(.back, "arrow.backward", "Back", minHeight: metrics.keyMinHeight) {
+                        haptics.thud(.medium) // heavier thud; never a dialog
+                        app.send(.back)
+                    }
+                    gridKey(.home, "house.fill", "Home", minHeight: metrics.keyMinHeight) {
+                        haptics.tick()
+                        app.send(.home)
+                    }
+                }
+                HStack(spacing: metrics.keySpacing) {
+                    gridKey(.play, "playpause.fill", "Play or pause", minHeight: metrics.keyMinHeight) {
+                        haptics.tick()
+                        app.send(.play)
+                    }
+                    if isTV {
+                        gridKey(.volumeMute, "speaker.slash.fill", "Mute", minHeight: metrics.keyMinHeight) {
+                            haptics.tick()
+                            app.send(.volumeMute)
+                        }
+                    } else {
+                        // Sticks can't mute a TV over ECP (CLAUDE.md:
+                        // volume keys are TV-only) — no dead buttons.
+                        gridKey(.instantReplay, "arrow.uturn.backward", "Instant replay",
+                                minHeight: metrics.keyMinHeight) {
+                            haptics.tick()
+                            app.send(.instantReplay)
+                        }
+                    }
+                }
+                if isTV {
+                    HStack(spacing: metrics.keySpacing) {
+                        HoldKeyButton(key: .volumeDown, symbol: "speaker.minus.fill",
+                                      label: "Volume down, hold to ramp")
+                        HoldKeyButton(key: .volumeUp, symbol: "speaker.plus.fill",
+                                      label: "Volume up, hold to ramp")
+                    }
+                }
+            }
+            .frame(maxHeight: .infinity)
+
+            quickActions
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 8)
+        .padding(.bottom, 12)
+    }
+
+    private func gridKey(_ key: ECPKey, _ symbol: String, _ label: String, minHeight: CGFloat,
                          action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: symbol)
                 .font(.title2.weight(.medium))
                 .frame(maxWidth: .infinity)
-                .frame(minHeight: 64, maxHeight: 96)
+                .frame(minHeight: minHeight, maxHeight: 96)
                 .frame(maxHeight: .infinity)
         }
         .buttonStyle(GridKeyStyle())
         .accessibilityLabel(label)
     }
 
+    /// Keyboard, Channels, Search. Each label stays on one line: full-size
+    /// text where the row is wide enough, smaller text on narrow phones, and
+    /// icons alone at the largest text sizes.
     private var quickActions: some View {
-        HStack(spacing: 14) {
+        ViewThatFits(in: .horizontal) {
+            quickActionRow(font: .subheadline.weight(.semibold), padding: 12, spacing: 10, showsTitles: true)
+            quickActionRow(font: .caption.weight(.semibold), padding: 8, spacing: 8, showsTitles: true)
+            quickActionRow(font: .subheadline.weight(.semibold), padding: 12, spacing: 10, showsTitles: false)
+        }
+    }
+
+    private func quickActionRow(font: Font, padding: CGFloat, spacing: CGFloat,
+                                showsTitles: Bool) -> some View {
+        let style = CapsuleActionStyle(font: font, horizontalPadding: padding, fillsWidth: true)
+        return HStack(spacing: spacing) {
             Button {
                 haptics.tick()
                 sheet = .keyboard
             } label: {
-                Label("Keyboard", systemImage: "keyboard")
+                quickActionLabel("Keyboard", "keyboard", showsTitle: showsTitles)
             }
-            .buttonStyle(CapsuleActionStyle())
+            .buttonStyle(style)
 
             Button {
                 haptics.tick()
                 sheet = .channels
             } label: {
-                Label("Channels", systemImage: "square.grid.3x3")
+                quickActionLabel("Channels", "square.grid.3x3", showsTitle: showsTitles)
             }
-            .buttonStyle(CapsuleActionStyle())
+            .buttonStyle(style)
 
             Button {
                 haptics.tick()
                 app.send(.search)
             } label: {
-                Label("Search", systemImage: "magnifyingglass")
+                quickActionLabel("Search", "magnifyingglass", showsTitle: showsTitles)
             }
-            .buttonStyle(CapsuleActionStyle())
+            .buttonStyle(style)
         }
     }
+
+    /// Icon-only labels keep their title for VoiceOver.
+    @ViewBuilder
+    private func quickActionLabel(_ title: String, _ symbol: String, showsTitle: Bool) -> some View {
+        if showsTitle {
+            Label(title, systemImage: symbol)
+        } else {
+            Label(title, systemImage: symbol).labelStyle(.iconOnly)
+        }
+    }
+}
+
+/// Sizes for one arrangement of the remote, from roomy to tight.
+private struct RemoteMetrics {
+    /// Share of the available height given to the swipe surface.
+    var surfaceShare: CGFloat
+    var surfaceMinHeight: CGFloat
+    var keyMinHeight: CGFloat
+    /// Gap between the surface, the key grid and the quick actions.
+    var sectionSpacing: CGFloat
+    var keySpacing: CGFloat
+
+    static let regular = RemoteMetrics(surfaceShare: 0.5, surfaceMinHeight: 260,
+                                       keyMinHeight: 64, sectionSpacing: 20, keySpacing: 16)
+    static let compact = RemoteMetrics(surfaceShare: 0.42, surfaceMinHeight: 220,
+                                       keyMinHeight: 52, sectionSpacing: 14, keySpacing: 12)
+    static let tight = RemoteMetrics(surfaceShare: 0.34, surfaceMinHeight: 170,
+                                     keyMinHeight: Theme.minTarget, sectionSpacing: 10, keySpacing: 10)
 }
 
 // MARK: - Swipe surface

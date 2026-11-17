@@ -10,6 +10,13 @@ struct HoldKeyButton: View {
     let label: String
 
     @EnvironmentObject private var app: AppState
+    /// True while a finger is down. Gesture state resets when the touch ends
+    /// *or is cancelled* (a sheet opens, a call comes in, the app goes to the
+    /// background), so the key-up below goes out either way. `onEnded` alone
+    /// is not called for a cancelled touch, which would leave the Roku
+    /// ramping the volume with nothing to stop it.
+    @GestureState private var isTouching = false
+    /// True between the key-down the Roku was sent and its key-up.
     @State private var isHolding = false
     @State private var tickTimer: Timer?
 
@@ -23,23 +30,32 @@ struct HoldKeyButton: View {
             .animation(Theme.pressAnimation, value: isHolding)
             .gesture(
                 DragGesture(minimumDistance: 0)
-                    .onChanged { _ in
-                        guard !isHolding else { return }
-                        isHolding = true
-                        Haptics.light()
-                        app.beginHold(key)
-                        tickTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true) { _ in
-                            Haptics.light()
-                        }
-                    }
-                    .onEnded { _ in
-                        isHolding = false
-                        tickTimer?.invalidate()
-                        tickTimer = nil
-                        app.endHold(key)
-                    }
+                    .updating($isTouching) { _, touching, _ in touching = true }
             )
+            .onChange(of: isTouching) { touching in
+                if touching { beginHold() } else { endHold() }
+            }
+            .onDisappear(perform: endHold)
             .accessibilityLabel(label)
             .accessibilityAddTraits(.isButton)
+    }
+
+    private func beginHold() {
+        // Refused when the free key presses are used up: nothing was sent,
+        // so there is nothing to tick for and nothing to release.
+        guard !isHolding, app.beginHold(key) else { return }
+        isHolding = true
+        Haptics.light()
+        tickTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true) { _ in
+            Haptics.light()
+        }
+    }
+
+    private func endHold() {
+        guard isHolding else { return }
+        isHolding = false
+        tickTimer?.invalidate()
+        tickTimer = nil
+        app.endHold(key)
     }
 }

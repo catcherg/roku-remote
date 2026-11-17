@@ -26,6 +26,10 @@ enum Theme {
     /// Accent (teal — set in Assets as AccentColor; mirrored here for shapes).
     static let accent = Color("AccentColor")
 
+    /// Text and glyphs on an accent fill. Black reads on both accent teals
+    /// (6.8:1 light, 12.1:1 dark); white drops to 1.7:1 on the dark-mode one.
+    static let onAccent = Color.black
+
     /// Live status dot colors for the connected pill.
     static let statusConnected = Color.green
     static let statusReconnecting = Color.yellow

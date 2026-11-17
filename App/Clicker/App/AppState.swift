@@ -157,10 +157,13 @@ final class AppState: ObservableObject {
     }
 
     /// Press-and-hold support (volume ramping): Roku auto-repeats between
-    /// keydown and keyup.
-    func beginHold(_ key: ECPKey) {
-        guard let device, mayPress() else { return }
+    /// keydown and keyup. Returns false when the press was refused and no
+    /// key-down went out, so the caller has nothing to release.
+    @discardableResult
+    func beginHold(_ key: ECPKey) -> Bool {
+        guard let device, mayPress() else { return false }
         Task { await perform(countsAsKeyPress: true) { try await self.client.keydown(key, ip: device.ip) } }
+        return true
     }
 
     func endHold(_ key: ECPKey) {

@@ -8,34 +8,56 @@ import SwiftUI
 struct PaywallView: View {
     @EnvironmentObject private var entitlements: EntitlementStore
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var selection: PurchaseProduct = .weekly
 
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 12) {
-                Image(systemName: "av.remote")
-                    .font(.system(size: 34))
-                    .foregroundStyle(Theme.accent)
-                if let status {
-                    Text(status)
-                        .font(.footnote.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                }
-                Text("Keep using Clicker")
-                    .font(.system(.title, design: .rounded).bold())
-                    .multilineTextAlignment(.center)
-                Text("Both plans include everything: the swipe remote, typing with your phone's keyboard, the channel launcher, and volume and power on Roku TVs.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
+    /// The terms and buttons normally stay pinned under the plans. At
+    /// accessibility text sizes they are too tall for that and would cover
+    /// the plans, so they scroll with them instead.
+    private var pinsActions: Bool { !dynamicTypeSize.isAccessibilitySize }
 
-                plans
+    var body: some View {
+        GeometryReader { proxy in
+            // Short screens drop the artwork and put the plans first, so
+            // both plans show without scrolling.
+            let isShort = pinsActions && proxy.size.height < 430
+            ScrollView {
+                VStack(spacing: isShort ? 8 : 12) {
+                    if !isShort {
+                        Image(systemName: "av.remote")
+                            .font(.system(size: 34))
+                            .foregroundStyle(Theme.accent)
+                    }
+                    if let status {
+                        Text(status)
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                    }
+                    Text("Keep using Clicker")
+                        .font(.system(.title, design: .rounded).bold())
+                        .multilineTextAlignment(.center)
+
+                    if !isShort { included }
+                    plans
+                    if isShort { included }
+
+                    if !pinsActions {
+                        actions.padding(.top, 8)
+                    }
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 12)
             }
-            .padding(.horizontal, 24)
-            .padding(.bottom, 12)
         }
-        .safeAreaInset(edge: .bottom) { actions }
+        .safeAreaInset(edge: .bottom) {
+            if pinsActions {
+                actions
+                    .padding(.horizontal, 24)
+                    .padding(.top, 10)
+                    .padding(.bottom, 8)
+                    .background(Theme.background)
+            }
+        }
         .background(Theme.background.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -53,6 +75,15 @@ struct PaywallView: View {
     }
 
     // MARK: - Plans
+
+    /// What either plan buys.
+    private var included: some View {
+        Text("Both plans include everything: the swipe remote, typing with your phone's keyboard, the channel launcher, and volume and power on Roku TVs.")
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
+    }
 
     @ViewBuilder private var plans: some View {
         switch entitlements.offer {
@@ -162,16 +193,18 @@ struct PaywallView: View {
             .frame(minHeight: Theme.minTarget)
             .disabled(entitlements.activity != nil)
 
-            HStack(spacing: 20) {
-                Link("Terms of Use", destination: AppInfo.termsURL)
-                Link("Privacy Policy", destination: AppInfo.privacyPolicyURL)
+            // Side by side where they fit, stacked at large text sizes.
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 20) { legalLinks }
+                VStack(spacing: 10) { legalLinks }
             }
             .font(.footnote)
         }
-        .padding(.horizontal, 24)
-        .padding(.top, 10)
-        .padding(.bottom, 8)
-        .background(Theme.background)
+    }
+
+    @ViewBuilder private var legalLinks: some View {
+        Link("Terms of Use", destination: AppInfo.termsURL)
+        Link("Privacy Policy", destination: AppInfo.privacyPolicyURL)
     }
 
     // MARK: - Copy
@@ -265,9 +298,10 @@ struct PurchaseButtonLabel: View {
     var body: some View {
         ZStack {
             Text(title).opacity(isBusy ? 0 : 1)
-            if isBusy { ProgressView() }
+            if isBusy { ProgressView().tint(Theme.onAccent) }
         }
         .font(.headline)
+        .foregroundStyle(Theme.onAccent)
         .frame(maxWidth: .infinity)
         .padding(.vertical, 10)
     }
