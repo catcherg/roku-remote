@@ -32,14 +32,14 @@ Last updated 2026-11-15.
 - [ ] Decide on the multicast entitlement. Was the `com.apple.developer.networking.multicast` request approved?
   - **Yes:** add a `.entitlements` file with that key, regenerate the provisioning profile, and turn on the SSDP flag (`SSDPDiscoverer.swift:12`).
   - **No/pending:** ship with subnet scan only. Leave the entitlement out entirely. Signing fails if you claim an entitlement that wasn't granted.
-- [ ] Do a Release-config build on a real iPhone. Check that the `#if DEBUG` purchase backend and debug launch args aren't included, that no `.storekit` file is bundled, and that there are no console warnings.
+- [ ] Do a Release-config build on a real iPhone. Check that the `#if DEBUG` purchase backend and debug launch args aren't included, that no `.storekit` file is bundled, and that there are no console warnings. A Release build for the simulator on 2026-11-17 had no `.storekit` file and no debug switches in the binary; the run on a real iPhone is still to do.
 
 ## 3. Hardening (Roadmap Phase 4)
 
 - [ ] Go through the Phase 4 test matrix on a real Roku: Wi-Fi drops, Roku off or changing IP, sleep/resume, guest-network isolation, multiple Rokus, "Limited" mode help flow, VPN warning, button mashing, Instruments leaks/CPU.
-- [ ] **Free-preview edge cases:** the 10 free presses count only presses the Roku accepted, a held key always stops, and the plans sheet opens on press 11.
-- [ ] **Run the app on an iPad.** It's iPhone-only (`TARGETED_DEVICE_FAMILY: 1`), but App Review often tests iPhone apps on iPads in compatibility mode. A broken layout there (paywall included) gets rejected under 2.1/4.0.
-- [ ] Test the smallest screen (iPhone SE) and the largest (Pro Max), plus Dynamic Type at its largest size. The plans sheet must keep the price, renewal terms and Restore visible.
+- [x] **Free-preview edge cases:** the 10 free presses count only presses the Roku accepted, a held key always stops, and the plans sheet opens on press 11. Checked 2026-11-17 in the simulator against a stand-in Roku, not real hardware. It turned up one bug, now fixed: a hold that was interrupted (a sheet opening, the app going to the background) never sent its key-up.
+- [x] **Run the app on an iPad.** It's iPhone-only (`TARGETED_DEVICE_FAMILY: 1`), but App Review often tests iPhone apps on iPads in compatibility mode. A broken layout there (paywall included) gets rejected under 2.1/4.0. Checked 2026-11-17 on the iPad (A16) simulator: remote, device list, Settings and the plans sheet. The plans sheet used to hide the Lifetime plan below the fold at this size; it now shows both.
+- [x] Test the smallest screen (iPhone SE) and the largest (Pro Max), plus Dynamic Type at its largest size. The plans sheet must keep the price, renewal terms and Restore visible. Checked 2026-11-17 in the simulator: every screen on the iPhone SE (3rd generation), also at the largest text size; the remote and intro on the iPhone 17 Pro Max; the plans sheet on the iPhone 17 Pro. Fixed along the way: the remote's bottom row wrapped mid-word on every phone and ran off the screen on the SE, the volume glyphs collided at the largest text size, and the purchase button's white text was unreadable on the dark-mode teal.
 - [ ] Tag `v0.4.0`.
 
 ## 4. Apple business setup (only you can do this, in App Store Connect). START NOW
@@ -72,7 +72,7 @@ The product IDs are in [Entitlement.swift](App/Clicker/Features/Purchase/Entitle
 - [ ] Check the price in each country. Apple fills them in from the US price. Set Mexico by hand, as the go-to-market doc says.
 - [ ] For each one: localized display name and description, plus a **review screenshot** (the plans sheet). The screenshot is required.
 - [ ] Both show **"Ready to Submit."** The first IAPs and the first subscription must be attached to the 1.0 version page when you submit (see §10). They can't be submitted on their own.
-- [ ] **Guideline 3.1.2 (subscriptions) check:** the plans sheet shows the price per week, the trial length, that it auto-renews until cancelled, and links to Terms and Privacy. Restore is reachable from the sheet and from Settings. All of this is in `PaywallView` already, so re-check it on the final build.
+- [ ] **Guideline 3.1.2 (subscriptions) check:** the plans sheet shows the price per week, the trial length, that it auto-renews until cancelled, and links to Terms and Privacy. Restore is reachable from the sheet and from Settings. All of this is in `PaywallView` already, so re-check it on the final build. A simulator pass on 2026-11-17, with the debug store's prices, found all of it present on the iPhone SE, iPhone 17 Pro and iPad.
 - [ ] **Terms of Use link in the metadata. This is required, not optional.** Apple says both the app and the App Store metadata must link to the Terms of Use and Privacy Policy. The plans sheet already does. For the metadata, put `https://getclicker.me/terms` in the description (§9), in every language you add. A missing link is a common 3.1.2 rejection.
 
 ## 7. TestFlight
@@ -102,10 +102,12 @@ The product IDs are in [Entitlement.swift](App/Clicker/Features/Purchase/Entitle
 
 ## 9. Product page metadata
 
+Drafts of every text field below, in English and Spanish (Mexico), are in [APP_STORE_LISTING.md](APP_STORE_LISTING.md), each checked against Apple's character limit. Paste from there.
+
 - [ ] **Subtitle** (max 30 chars). Ideas: "Swipe to control your TV" (24), "No ads. No account." (19). Don't promise "one price" now that there's a subscription.
 - [ ] **Keywords** (100 chars, comma-separated, no spaces). Don't repeat words already in the name ("clicker", "remote", "roku"). No competitor trademarks.
 - [ ] Description and promotional text: describe both plans (weekly with a 3-day free trial, or a one-time Lifetime), no ads, no account, no tracking. Say that the subscription auto-renews until cancelled, and link the Terms of Use and Privacy Policy. Put the "Not affiliated with Roku, Inc." disclaimer in the description.
-- [ ] **Screenshots:** 6.9" iPhone (1320 × 2868) is required. 3 minimum, up to 10, dark. **No Roku logo, purple, or Roku UI in the shots** (5.2). Be careful with TV-screen backgrounds.
+- [ ] **Screenshots:** 6.9" iPhone (1320 × 2868) is required. 3 minimum, up to 10, dark. **No Roku logo, purple, or Roku UI in the shots** (5.2). Be careful with TV-screen backgrounds. Two of four are made, in English and Spanish, in `AppStore/screenshots/`. The keyboard and channel-grid shots are still missing; [APP_STORE_LISTING.md](APP_STORE_LISTING.md) says how to add them.
 - [ ] App preview video (optional, recommended).
 - [ ] Support URL `https://getclicker.me/support`, Marketing URL `https://getclicker.me`, Privacy Policy URL `https://getclicker.me/privacy`.
 - [ ] Copyright line (e.g. "2026 Catcher Griffin").
@@ -119,7 +121,7 @@ The product IDs are in [Entitlement.swift](App/Clicker/Features/Purchase/Entitle
 
 - [ ] Version **1.0.0** page: select the build, and under **In-App Purchases and Subscriptions** attach the weekly subscription and the Lifetime unlock.
 - [ ] **App Review Information:** contact name, phone and email. Sign-in required: **No**.
-- [ ] **Review notes:** a Roku device on the same Wi-Fi network is required, with a link to an **unlisted demo video** (iPhone controlling a real TV: discovery, remote, keyboard, channels, the 10 free presses, plans sheet, subscribe, lifetime, restore). Explain that the reviewer can reach the plans sheet without a Roku via Settings → See Plans. Point out the nominative "for Roku" name and the in-app disclaimer (Settings and Help).
+- [ ] **Review notes:** a Roku device on the same Wi-Fi network is required, with a link to an **unlisted demo video** (iPhone controlling a real TV: discovery, remote, keyboard, channels, the 10 free presses, plans sheet, subscribe, lifetime, restore). Explain that the reviewer can reach the plans sheet without a Roku via Settings → See Plans. Point out the nominative "for Roku" name and the in-app disclaimer (Settings and Help). The notes are drafted in [APP_STORE_LISTING.md](APP_STORE_LISTING.md); only the video link is missing.
 - [ ] Release option: **Manually release**, so you control launch day.
 - [ ] Submit. Review typically takes 24–48h.
 - [ ] If rejected, follow the playbook in Roadmap Phase 6 step 5: reply in App Review the same day. Metadata-only fixes don't need a new build. If the rejection is about the weekly price under 3.1.2, the one-time model at `b93df83` is the fallback.
