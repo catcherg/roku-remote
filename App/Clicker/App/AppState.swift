@@ -26,10 +26,14 @@ final class AppState: ObservableObject {
     private var failures = ConsecutiveFailureTracker(threshold: 3)
     private var scanTask: Task<Void, Never>?
     private var recoveryTask: Task<Void, Never>?
+    /// Decides whether a key press may be sent (free presses, then a plan).
+    /// Nil means no limit, as in previews.
+    private weak var gate: CommandGate?
 
     var device: RokuDevice? { connection.device }
 
-    init() {
+    init(gate: CommandGate? = nil) {
+        self.gate = gate
         devices = store.devices
     }
 
@@ -133,22 +137,33 @@ final class AppState: ObservableObject {
     }
 
     // MARK: - Commands (optimistic UI, roadmap §2.2 + Phase 2 task 8)
+    //
+    // Everything that makes the Roku do something asks the gate first and
+    // counts as one key press once the Roku accepts it. `endHold` is the one
+    // exception: a key-up must always go out, or a held key would never stop.
+
+    private func mayPress() -> Bool {
+        gate?.mayPress() ?? true
+    }
 
     func send(_ key: ECPKey) {
-        guard let device else { return }
-        Task { await perform { try await self.client.keypress(key, ip: device.ip) } }
+        guard let device, mayPress() else { return }
+        Task { await perform(countsAsKeyPress: true) { try await self.client.keypress(key, ip: device.ip) } }
     }
 
     func launchChannel(_ app: RokuApp) {
-        guard let device else { return }
-        Task { await perform { try await self.client.launch(appID: app.id, ip: device.ip) } }
+        guard let device, mayPress() else { return }
+        Task { await perform(countsAsKeyPress: true) { try await self.client.launch(appID: app.id, ip: device.ip) } }
     }
 
     /// Press-and-hold support (volume ramping): Roku auto-repeats between
-    /// keydown and keyup.
-    func beginHold(_ key: ECPKey) {
-        guard let device else { return }
-        Task { await perform { try await self.client.keydown(key, ip: device.ip) } }
+    /// keydown and keyup. Returns false when the press was refused and no
+    /// key-down went out, so the caller has nothing to release.
+    @discardableResult
+    func beginHold(_ key: ECPKey) -> Bool {
+        guard let device, mayPress() else { return false }
+        Task { await perform(countsAsKeyPress: true) { try await self.client.keydown(key, ip: device.ip) } }
+        return true
     }
 
     func endHold(_ key: ECPKey) {
@@ -157,14 +172,14 @@ final class AppState: ObservableObject {
     }
 
     func typeText(_ text: String) {
-        guard let device, !text.isEmpty else { return }
-        Task { await perform { try await self.client.typeText(text, ip: device.ip) } }
+        guard let device, !text.isEmpty, mayPress() else { return }
+        Task { await perform(countsAsKeyPress: true) { try await self.client.typeText(text, ip: device.ip) } }
     }
 
     func sendBackspace(count: Int = 1) {
-        guard let device, count > 0 else { return }
+        guard let device, count > 0, mayPress() else { return }
         Task {
-            await perform {
+            await perform(countsAsKeyPress: true) {
                 for _ in 0..<count {
                     try await self.client.keypress(.backspace, ip: device.ip)
                 }
@@ -186,11 +201,13 @@ final class AppState: ObservableObject {
         }
     }
 
-    private func perform(_ operation: @escaping () async throws -> Void) async {
+    private func perform(countsAsKeyPress: Bool = false,
+                         _ operation: @escaping () async throws -> Void) async {
         do {
             try await operation()
             failures.recordSuccess()
             isReconnecting = false
+            if countsAsKeyPress { gate?.didPress() }
         } catch ECPError.httpError(403) {
             // Limited mode: device reachable, control blocked. Not a connectivity
             // failure — route the user to the fix instead of counting it.

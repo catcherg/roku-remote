@@ -26,6 +26,10 @@ enum Theme {
     /// Accent (teal — set in Assets as AccentColor; mirrored here for shapes).
     static let accent = Color("AccentColor")
 
+    /// Text and glyphs on an accent fill. Black reads on both accent teals
+    /// (6.8:1 light, 12.1:1 dark); white drops to 1.7:1 on the dark-mode one.
+    static let onAccent = Color.black
+
     /// Live status dot colors for the connected pill.
     static let statusConnected = Color.green
     static let statusReconnecting = Color.yellow
@@ -48,8 +52,9 @@ enum Theme {
 /// App-wide constants used by Settings/About.
 enum AppInfo {
     static let disclaimer = "Not affiliated with or endorsed by Roku, Inc. Roku is a trademark of Roku, Inc."
-    // TODO: point at the registered domain's privacy page before App Store submission.
-    static let privacyPolicyURL = URL(string: "https://example.com/privacy.html")!
+    static let privacyPolicyURL = URL(string: "https://getclicker.me/privacy")!
+    /// Terms of Use, linked from the paywall beside the privacy policy.
+    static let termsURL = URL(string: "https://getclicker.me/terms")!
 
     static var version: String {
         let short = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"

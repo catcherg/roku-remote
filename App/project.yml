@@ -29,19 +29,56 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.catchergriffin.clicker
-        MARKETING_VERSION: 0.3.0
+        DEVELOPMENT_TEAM: YZSL25MTN9
+        MARKETING_VERSION: 1.0.0
         CURRENT_PROJECT_VERSION: 1
         TARGETED_DEVICE_FAMILY: 1
         SWIFT_VERSION: "5.10"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
 
+  # Unit tests for app-target logic (subscription / lifetime entitlements and
+  # the free key presses). Hosted by the app so StoreKitTest can run real
+  # purchases against Clicker.storekit.
+  ClickerTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - ClickerTests
+      # Local StoreKit products (weekly subscription with a 3-day free trial,
+      # and the lifetime unlock). Bundled with the tests only; it never ships
+      # inside the app.
+      - path: Support/Clicker.storekit
+        buildPhase: resources
+    dependencies:
+      - target: Clicker
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.catchergriffin.clicker.tests
+        DEVELOPMENT_TEAM: YZSL25MTN9
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "5.10"
+        TARGETED_DEVICE_FAMILY: 1
+
 schemes:
   Clicker:
     build:
       targets:
         Clicker: all
+        ClickerTests: [test]
     run:
       config: Debug
+      # Run from Xcode with the local StoreKit products instead of the App Store.
+      storeKitConfiguration: Support/Clicker.storekit
+      # Debug-only switches (see DebugPurchaseBackend.swift). Tick them in the
+      # scheme editor: use the stand-in store instead of StoreKit, and run as
+      # if it were 4 days from now (past the free trial).
+      commandLineArguments:
+        "-ClickerDebugStore YES": false
+        "-ClickerDebugDaysAhead 4": false
+    test:
+      config: Debug
+      targets:
+        - ClickerTests
     archive:
       config: Release

@@ -24,13 +24,22 @@ struct RemoteKeyStyle: ButtonStyle {
     }
 }
 
-/// Capsule action button (keyboard / channels quick actions).
+/// Capsule action button (keyboard / channels quick actions). The label
+/// stays on one line; the row that holds these chooses a font and padding
+/// that fit the screen width.
 struct CapsuleActionStyle: ButtonStyle {
+    var font: Font = .subheadline.weight(.semibold)
+    var horizontalPadding: CGFloat = 18
+    /// Stretch to share the row's width equally with the other capsules.
+    var fillsWidth = false
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.subheadline.weight(.semibold))
-            .padding(.horizontal, 18)
-            .frame(height: Theme.minTarget)
+            .font(font)
+            .lineLimit(1)
+            .padding(.horizontal, horizontalPadding)
+            .frame(maxWidth: fillsWidth ? .infinity : nil)
+            .frame(minHeight: Theme.minTarget)
             .background(
                 Capsule().fill(configuration.isPressed ? Theme.keyPressed : Theme.keyFill)
             )

@@ -86,22 +86,35 @@ Everything else is static; hover/focus states only. All motion gated behind
    disabled button; a control must state what it does), phone mockup + swipe
    animation
 2. **Eyes-free** — the differentiator section, dark full-width band
-3. **Value props** — one price / instant connection / private by design
+3. **Value props** — two plain ways to pay / instant connection / private by
+   design
 4. **Comparison table** — vs "typical remote apps" (signal color for their
-   column). Under 560px it **re-flows into stacked blocks** so the signal-red
+   column). Three rows since 2026-11-14: ads, trackers, account. Under 560px it **re-flows into stacked blocks** so the signal-red
    column is never scrolled off-screen, with `data-who` labels naming each
    side so meaning never rests on colour alone
 5. **Beta** — single email field → Formspree
-6. **FAQ** — 5 items: all Rokus? / after the 7 days? / same Wi-Fi? /
+6. **FAQ** — 5 items: all Rokus? / how does paying work? / same Wi-Fi? /
    account or internet needed? / how does the beta work?
 7. **Footer** — Roku trademark disclaimer (required on every page)
 
-## Business model (authoritative, per user 2026-08-19)
+## Business model (authoritative, per user 2026-11-14)
 
-**Free download → 7-day free trial → $4.99 one-time IAP unlock.** The roadmap
-previously said paid-upfront; that was wrong and has been corrected. Site copy
-says "Free for 7 days. Then one price, forever." — **no dollar amount on the
-site** (user's explicit choice, Q19).
+**Free download → a short free preview → a choice of two plans: a weekly
+subscription with a 3-day free trial, or a one-time lifetime unlock.** This
+replaces the 2026-08-19 model (7-day trial, then a $4.99 one-time unlock).
+Site copy says "3 days free on the weekly plan, or pay once for lifetime." —
+still **no dollar amount on the site** (user's explicit choice, Q19, carried
+over). What the change means for copy:
+
+- Nothing on the site may say "no subscriptions" or "one price", or frame
+  weekly plans as the problem. "No ads, no account, no tracking" replaces the
+  old three-part line.
+- The comparison table has no price row.
+- The Terms page carries the plan terms the in-app paywall links to: renewal,
+  cancelling, what "lifetime" means, refunds through Apple. Keep it in step
+  with the paywall.
+- The share card (`public/og-image.png`) repeats the hero's pricing line, so
+  it must be re-rendered whenever that line changes.
 
 ## Beta email form
 
@@ -147,8 +160,10 @@ changes.
   OK dot on near-black), redrawn as SVG. One brand mark, everywhere.
 - **Wordmark split is deliberate**: `clicker_` (lowercase mono, teal cursor)
   is the logotype; "Clicker" (capitalized) is the name in all prose. Keep both.
-- **Values kicker**: "no server to rent, no data to sell" line ties all three
-  cards to the heading's question.
+- **Values kicker**: one line ties all three cards to the heading's question.
+  Since 2026-11-14 it reads "no ads and sells no data, so you are its only
+  customer"; the earlier "no server to rent" wording argued for a one-time
+  price and was dropped with it.
 - **404 page** exists (`404.astro`); **honeypot** (`_gotcha`) is in the beta
   form — bots get a fake success and nothing is sent.
 - **Hero recapture checklist** (after the Search-pill-wrap app fix lands):
@@ -168,7 +183,8 @@ Settled in a second grilling session after the first build:
 - Hard `<br>` removed from the headline; `text-wrap: balance` handles it (Q3)
 - **Nav carries "Get a beta invite"** so the form is reachable from anywhere (Q4)
 - Comparison table **restacks under 560px** (Q5)
-- "Three promises" → **"Why pay once for a remote?"** (Q6)
+- "Three promises" → **"Why pay once for a remote?"** (Q6); now **"Why pay
+  for a remote?"** after the 2026-11-14 pricing change
 - **Second swipe cut** from the hero loop (Q7)
 - Screenshots moved to `src/assets/` + Astro `<Image>` (Q8)
 - **Latin-only self-hosted fonts**, Fontsource dropped as a dependency (Q9)
@@ -181,8 +197,9 @@ Settled in a second grilling session after the first build:
 - [ ] Published contact email on privacy + terms
 - [ ] Live privacy-policy URL is an App Store submission blocker;
       `Theme.swift → AppInfo.privacyPolicyURL` still points at example.com
-- [ ] App must implement the trial: free download + $4.99 one-time IAP
-      (StoreKit work, not website scope)
+- [ ] App purchase flow (weekly plan + lifetime unlock) is built on the
+      `feat/trial-unlock` branch; it still needs the products created in App
+      Store Connect and a run against real StoreKit (not website scope)
 - [ ] At launch: swap the App Store status chip for Apple's official badge
       asset, wire the Formspree endpoint
 - [x] ~~`og:image`, `og:url`, canonical, `robots.txt`, sitemap~~ — done

@@ -28,6 +28,7 @@ struct OnboardingView: View {
             } label: {
                 Text(page == 0 ? "Continue" : "Find My Roku")
                     .font(.headline)
+                    .foregroundStyle(Theme.onAccent)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
             }
@@ -46,7 +47,7 @@ struct OnboardingView: View {
                 .foregroundStyle(Theme.accent)
             Text("Clicker")
                 .font(.system(.largeTitle, design: .rounded).bold())
-            Text("The premium remote for your Roku.\nNo account. No ads. No subscriptions.")
+            Text("The premium remote for your Roku.\nNo account. No ads. No tracking.")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
             Spacer()
